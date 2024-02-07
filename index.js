@@ -2,10 +2,12 @@ const express = require('express');
 
 const bodyParser = require('body-parser');
 const VSCodeController = require('./vscode-gateway/VSCodeController');
+const openAiController = require('./openAI-gateway/OpenAIController');
 
 const app = express();
-const port = 8888; 
+const port = 8888;
 const vscodeController = new VSCodeController();
+const openaiController = new openAiController();
 // Middleware to parse JSON request body
 app.use(bodyParser.json());
 
@@ -24,10 +26,23 @@ const getHighlightedCodeHandler = vscodeController.getHighlightedCode.bind(vscod
 // Define the endpoint routes for vscode controller
 vscodeRouter.post('/highlight', getHighlightedCodeHandler);
 
+// Create an instance of the controller class
+const openaiRouter = express.Router();
+
+// Bind the openai controller method to the controller instance
+const processPromptHandler = openaiController.processPrompt.bind(openaiController);
+
+// Define the endpoint routes for api controller
+openaiRouter.post('/processPrompt', processPromptHandler);
+
 // Mount the router on the '/vscode' path
 app.use('/vscode', vscodeRouter);
+app.use('/openai', openaiRouter);
+
 
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+
+
