@@ -1,6 +1,6 @@
 class VSCodeController {
     constructor() {
-       this.highlightedCode = "";
+        this.highlightedCode = "";
     }
 
     getHighlightedCode(req, res) {
@@ -9,7 +9,7 @@ class VSCodeController {
         res.status(200).send('Received highlighted text successfully.');
     }
 
-    
+
 }
 
 module.exports = VSCodeController;

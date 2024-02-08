@@ -3,7 +3,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const VSCodeController = require('./vscode-gateway/VSCodeController');
 const openAiController = require('./openAI-gateway/OpenAIController');
-
 const app = express();
 const port = 8888;
 const vscodeController = new VSCodeController();
@@ -43,6 +42,7 @@ app.use('/openai', openaiRouter);
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+
 });
 
 
