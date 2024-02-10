@@ -37,10 +37,10 @@ const processPromptHandler = openaiController.processPrompt.bind(openaiControlle
 openaiRouter.post('/processPrompt', processPromptHandler);
 
 // Bind the openai controller method to the controller instance
-const fixcodehandler = chatController.processInput.bind(chatController);
+const prompthandler = chatController.processInput.bind(chatController);
 
 // Define the endpoint routes for api controller
-openaiRouter.post('/fixcode', fixcodehandler);
+openaiRouter.post('/prompt', prompthandler);
 
 // Mount the router on the '/vscode' path
 app.use('/vscode', vscodeRouter);

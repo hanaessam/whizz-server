@@ -10,8 +10,6 @@ const VSCodeController = require('../vscode-gateway/VSCodeController');
 class ChatSession {
     constructor() {
         this.currentMsg = new Message();
-
-        // this.promptGenerator = new PromptGenerator();
     }
     generatorFactory() {
         console.log(this.originalPrompt.body.type);
