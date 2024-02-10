@@ -6,7 +6,7 @@ class VSCodeController {
     getHighlightedCode(req, res) {
         this.highlightedCode = req.body.highlightedCode;
         console.log('Highlighted text received:', this.highlightedCode);
-        res.status(200).send('Received highlighted text successfully.');
+        res.status(200).send(this.highlightedCode);
     }
 
 

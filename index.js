@@ -3,10 +3,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const VSCodeController = require('./vscode-gateway/VSCodeController');
 const openAiController = require('./openAI-gateway/OpenAIController');
+const ChatController = require('./chat-module/ChatController');
 const app = express();
 const port = 8888;
 const vscodeController = new VSCodeController();
 const openaiController = new openAiController();
+const chatController = new ChatController();
 // Middleware to parse JSON request body
 app.use(bodyParser.json());
 
@@ -33,6 +35,12 @@ const processPromptHandler = openaiController.processPrompt.bind(openaiControlle
 
 // Define the endpoint routes for api controller
 openaiRouter.post('/processPrompt', processPromptHandler);
+
+// Bind the openai controller method to the controller instance
+const fixcodehandler = chatController.processInput.bind(chatController);
+
+// Define the endpoint routes for api controller
+openaiRouter.post('/fixcode', fixcodehandler);
 
 // Mount the router on the '/vscode' path
 app.use('/vscode', vscodeRouter);
