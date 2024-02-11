@@ -13,11 +13,11 @@ class GitHubAuth {
     this.app.use(passport.session());
 
     passport.serializeUser(function (user, done) {
-      done(null, user.id);
+      done(null, user);
     });
 
-    passport.deserializeUser(function (id, done) {
-      done(null, { id: id });
+    passport.deserializeUser(function (user, done) {
+      done(null, user);
     });
   }
 
@@ -31,11 +31,11 @@ class GitHubAuth {
           callbackURL: `http://localhost:8888/auth/github/callback`,
         },
         function (accessToken, refreshToken, profile, cb) {
-          console.log(profile);
           cb(null, {
             id: profile.id,
             accessToken: accessToken,
             refreshToken: refreshToken,
+            profile: profile,
           });
         }
       )
@@ -52,6 +52,18 @@ class GitHubAuth {
         res.send("Authenticated with github!");
       }
     );
+  }
+
+  getUserProfile() {
+    this.app.get("/github/user", function (req, res) {
+      if (req.user) {
+        res.send(req.user);
+        console.log(req.user);
+      } else {
+        console.log(req.user);
+        res.send("No user is logged in or no profile information available");
+      }
+    });
   }
 }
 

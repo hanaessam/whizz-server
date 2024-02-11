@@ -21,6 +21,7 @@ const gitHubAuth = new GitHubAuth(app);
 gitHubAuth.initialize();
 gitHubAuth.setupGitHubStrategy();
 gitHubAuth.setupGitHubRoutes();
+gitHubAuth.getUserProfile();
 
 const vscodeController = new VSCodeController();
 const openaiController = new openAiController();
