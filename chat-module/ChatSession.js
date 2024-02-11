@@ -20,7 +20,7 @@ class ChatSession {
         else if (this.originalPrompt.body.type == "fix") {
             return new FixPromptGenerator();
         }
-        else {
+        else if (this.originalPrompt.body.type == "general"){
             return new GeneralPromptGenerator();
         }
     }
@@ -46,6 +46,7 @@ class ChatSession {
 
         this.promptGenerator = this.generatorFactory();
         this.promptGenerator.setCodeSnippet(this.originalPrompt.body.codesnippet);
+        this.promptGenerator.setPrompt(this.originalPrompt.body.prompt);
         this.currentPrompt = this.promptGenerator.generatePrompt(this.originalPrompt);
         console.log('here we are in chat session processing input');
 

@@ -9,8 +9,9 @@ class GeneralPromptGenerator extends PromptGenerator {
     setCodeSnippet(codeSnippet) {
         this.codeSnippet = codeSnippet;
     }
+
     generatePrompt() {
-        this.prompt = `you are a software engineer,\n${this.codeSnippet}\nyour audience is programmers ?`;
+        this.prompt = `${this.prompt},\n${this.codeSnippet}\n`;
         return this.prompt;
     }
 }
