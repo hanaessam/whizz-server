@@ -11,10 +11,10 @@ const port = 8888;
 
 // Initialize express session
 app.use(session({
-    secret: 'any string',
-    resave: false,
-    saveUninitialized: true,
-  }));
+  secret: 'any string',
+  resave: false,
+  saveUninitialized: true,
+}));
 
 // Github OAuth setup
 const gitHubAuth = new GitHubAuth(app);
@@ -46,6 +46,10 @@ vscodeRouter.post("/highlight", getHighlightedCodeHandler);
 
 // Create an instance of the controller class
 const openaiRouter = express.Router();
+// const githubRouter = express.Router();
+
+// const githubControllerHandler = gitHubAuth.getUserProfile.bind(gitHubAuth);
+// githubRouter.get("/user", githubControllerHandler);
 
 // Bind the openai controller method to the controller instance
 const processPromptHandler =
@@ -63,6 +67,7 @@ openaiRouter.post("/prompt", prompthandler);
 // Mount the router on the '/vscode' path
 app.use("/vscode", vscodeRouter);
 app.use("/openai", openaiRouter);
+// app.use("/github", githubRouter);
 
 // Start the server
 app.listen(port, () => {
