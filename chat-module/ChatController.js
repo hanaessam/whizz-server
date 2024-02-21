@@ -8,7 +8,6 @@ class ChatController {
     async processInput(req, res) {
         try {
             this.chatSession = new ChatSession();
-
             const gptResponse = await this.chatSession.processInput(req);
             res.status(200).send(gptResponse);
         } catch (error) {

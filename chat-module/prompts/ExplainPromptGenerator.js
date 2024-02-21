@@ -10,7 +10,7 @@ class ExplainPromptGenerator extends PromptGenerator {
         this.codeSnippet = codeSnippet;
     }
     generatePrompt() {
-        this.prompt = `you are a software engineer, explain this code:\n${this.codeSnippet}\n\nyour audience is 
+        this.prompt = `you are a software engineer, explain this code in maximum 5 general points:\n${this.codeSnippet}\n\nyour audience is 
         programmers ?`;
         return this.prompt;
     }
