@@ -1,39 +1,35 @@
+// index.js
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
-const session = require('express-session');
-const GitHubAuth = require("./github-oauth/GitHubOAuth");
-const vscodeRouter = require('./routes/vscodeRoutes');
-const openaiRouter = require('./routes/openAIRoutes');
+const vscodeRouter = require("./routes/vscodeRoutes");
+const openaiRouter = require("./routes/openAIRoutes");
+const authRoutes = require('./routes/authRoutes');
+const passport = require("./auth/githubAuth");
+const session = require("express-session");
 
-// Create an instance of the express server
 const app = express();
 const port = 8888;
 
-// Initialize express session
-app.use(session({
-    secret: 'any string',
+app.use(
+  session({
+    secret: "keyboard",
     resave: false,
     saveUninitialized: true,
-}));
+  })
+);
 
-// Middleware to parse JSON request body
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(bodyParser.json());
 
-// Github OAuth setup
-const gitHubAuth = new GitHubAuth(app);
-gitHubAuth.initialize();
-gitHubAuth.setupGitHubStrategy();
-gitHubAuth.setupGitHubRoutes();
-gitHubAuth.getUserProfile();
-
-// Define init route
 app.get("/", (req, res) => {
   res.send("Hello World! This is your first web service.");
 });
 
 app.use("/vscode", vscodeRouter);
 app.use("/openai", openaiRouter);
-
+app.use(authRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
