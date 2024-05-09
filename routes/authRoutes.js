@@ -9,15 +9,13 @@ router.get(
   "/auth/github/callback",
   passport.authenticate("github"),
   function (req, res) {
-
     res.redirect(`http://localhost:54321/auth/${req.user.accessToken}`);
-    console.log(req.user.username);
   }
 );
 
 router.get("/me", async (req, res) => {
   const authHeader = req.headers.authorization;
-  
+
   if (!authHeader) {
     res.send({ user: null });
     return;
@@ -28,27 +26,21 @@ router.get("/me", async (req, res) => {
     return;
   }
 
-  let userId ='';
-  let username = '';
+  let user = null;
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-     userId = payload.id;
-     username = payload.username;
-  
-
+    user = jwt.verify(token, process.env.JWT_SECRET);
   } catch (e) {
     res.send({ user: null });
     return;
   }
 
-  if(!userId){
+  if (!user || !user.userId) {
     res.send({ user: null });
     return;
   }
 
-  res.send({ user: userId, username: username});
-  console.log(userId, username);
+  res.send({ user });
 });
 
 module.exports = router;

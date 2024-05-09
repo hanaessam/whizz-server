@@ -3,7 +3,7 @@ var GitHubStrategy = require("passport-github").Strategy;
 const jwt = require('jsonwebtoken');
 
 passport.serializeUser((user, done) => {
-  done(null, user.accessToken);
+  done(null, user);
 });
 
 passport.use(
@@ -15,15 +15,22 @@ passport.use(
     },
     (__, _, profile, cb) => {
      
-    
-
-       // Create a JWT token with the user data
-       const user = {
-        accessToken: jwt.sign({ id: profile.id, username: profile.username }, process.env.JWT_SECRET, {expiresIn: "1y"}),
-        profile: profile
-      };
-      
-      cb(null, user);
+      let user = {
+        userId: profile.id,
+        name: profile.displayName,
+        username: profile.username,
+      }
+     
+      cb(null, {
+        ...user,
+        accessToken: jwt.sign(
+          user,
+          process.env.ACCESS_TOKEN_SECRET,
+          {
+            expiresIn: "1y",
+          }
+        ),
+      });
     }
   )
 );
