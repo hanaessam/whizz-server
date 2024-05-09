@@ -11,14 +11,19 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: `http://localhost:${process.env.PORT}/auth/github/callback`,
+      callbackURL: `http://localhost:8888/auth/github/callback`,
     },
     (__, _, profile, cb) => {
-      console.log(profile);
-      cb(null, {
-        accessToken: jwt.sign({ id: profile.id }, process.env.JWT_SECRET, {expiresIn: "1y"}),
-        profile: profile,
-      });
+     
+    
+
+       // Create a JWT token with the user data
+       const user = {
+        accessToken: jwt.sign({ id: profile.id, username: profile.username }, process.env.JWT_SECRET, {expiresIn: "1y"}),
+        profile: profile
+      };
+      
+      cb(null, user);
     }
   )
 );

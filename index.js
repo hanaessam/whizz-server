@@ -7,9 +7,17 @@ const openaiRouter = require("./routes/openAIRoutes");
 const authRoutes = require('./routes/authRoutes');
 const passport = require("./auth/githubAuth");
 const session = require("express-session");
+const cors = require("cors");
 
 const app = express();
 const port = 8888;
+
+app.use(
+  cors({
+    origin: "*", // allow requests from any origin
+    methods: ["GET", "POST"], // allow GET and POST requests
+  })
+);
 
 app.use(
   session({
