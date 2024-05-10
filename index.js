@@ -35,31 +35,7 @@ app.get("/", (req, res) => {
   res.send("Hello World! This is your first web service.");
 });
 
-// Create an instance of the controller class
-const vscodeRouter = express.Router();
 
-// Bind the controller method to the controller instance
-const getHighlightedCodeHandler =
-  vscodeController.getHighlightedCode.bind(vscodeController);
-
-// Define the endpoint routes for vscode controller
-vscodeRouter.post("/highlight", getHighlightedCodeHandler);
-
-// Create an instance of the controller class
-const openaiRouter = express.Router();
-
-// Bind the openai controller method to the controller instance
-const processPromptHandler =
-  openaiController.processPrompt.bind(openaiController);
-
-// Define the endpoint routes for api controller
-openaiRouter.post("/processPrompt", processPromptHandler);
-
-// Bind the openai controller method to the controller instance
-const prompthandler = chatController.processInput.bind(chatController);
-
-// Define the endpoint routes for api controller
-openaiRouter.post("/prompt", prompthandler);
 
 // Mount the router on the '/vscode' path
 app.use("/vscode", vscodeRouter);

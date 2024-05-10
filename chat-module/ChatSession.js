@@ -5,6 +5,7 @@ const FixPromptGenerator = require('./prompts/FixPromptGenerator');
 const Message = require('./Message');
 const ChatController = require('./ChatController');
 const VSCodeController = require('../vscode-gateway/VSCodeController');
+const ResponseParser = require('./ResponseParser');
 
 
 class ChatSession {
@@ -52,7 +53,10 @@ class ChatSession {
 
         try {
             this.currentResponse = await this.processPrompt();
-            return this.currentResponse;
+            const parser = new ResponseParser(this.currentResponse);
+            const parsedCode = parser.parseResponse(this.currentResponse);
+
+            return { answer: this.currentResponse, code: parsedCode.code };
         } catch (error) {
             console.error('Error generating the prompt:', error);
             return 'Error generating the prompt'; // or handle the error in a way that suits your application
