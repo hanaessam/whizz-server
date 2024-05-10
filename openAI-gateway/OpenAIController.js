@@ -1,7 +1,7 @@
 OpenAiManager = require('./OpenAIManager.js');
 axios = require('axios');
 
-class openAiController {
+class OpenAIController {
     constructor() {
         this.openaiManager = new OpenAiManager();
     }
@@ -14,4 +14,4 @@ class openAiController {
     }
 
 }
-module.exports = openAiController;
+module.exports = OpenAIController;

@@ -1,35 +1,36 @@
+// index.js
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
-const session = require('express-session');
-const VSCodeController = require("./vscode-gateway/VSCodeController");
-const openAiController = require("./openAI-gateway/OpenAIController");
-const ChatController = require("./chat-module/ChatController");
-const GitHubAuth = require("./github-oauth/GitHubOAuth");
-// Create an instance of the express server
+const vscodeRouter = require("./routes/vscodeRoutes");
+const openaiRouter = require("./routes/openAIRoutes");
+const authRoutes = require('./routes/authRoutes');
+const passport = require("./auth/githubAuth");
+const session = require("express-session");
+const cors = require("cors");
+
 const app = express();
 const port = 8888;
 
-// Initialize express session
-app.use(session({
-  secret: 'any string',
-  resave: false,
-  saveUninitialized: true,
-}));
+app.use(
+  cors({
+    origin: "*", // allow requests from any origin
+    methods: ["GET", "POST"], // allow GET and POST requests
+  })
+);
 
-// Github OAuth setup
-const gitHubAuth = new GitHubAuth(app);
-gitHubAuth.initialize();
-gitHubAuth.setupGitHubStrategy();
-gitHubAuth.setupGitHubRoutes();
-gitHubAuth.getUserProfile();
+app.use(
+  session({
+    secret: "keyboard",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
-const vscodeController = new VSCodeController();
-const openaiController = new openAiController();
-const chatController = new ChatController();
-// Middleware to parse JSON request body
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(bodyParser.json());
 
-// Define init route
 app.get("/", (req, res) => {
   res.send("Hello World! This is your first web service.");
 });
@@ -46,10 +47,6 @@ vscodeRouter.post("/highlight", getHighlightedCodeHandler);
 
 // Create an instance of the controller class
 const openaiRouter = express.Router();
-// const githubRouter = express.Router();
-
-// const githubControllerHandler = gitHubAuth.getUserProfile.bind(gitHubAuth);
-// githubRouter.get("/user", githubControllerHandler);
 
 // Bind the openai controller method to the controller instance
 const processPromptHandler =
@@ -67,9 +64,9 @@ openaiRouter.post("/prompt", prompthandler);
 // Mount the router on the '/vscode' path
 app.use("/vscode", vscodeRouter);
 app.use("/openai", openaiRouter);
+app.use(authRoutes);
 // app.use("/github", githubRouter);
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

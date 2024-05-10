@@ -11,8 +11,8 @@ class FixPromptGenerator extends PromptGenerator {
     }
     generatePrompt() {
         console.log("THIS IS THE CODE SNIPPET: " + this.codeSnippet + '\n');
-        this.prompt = `you are a software engineer, fix this code:\n${this.codeSnippet}\n\nyour audience is 
-        programmers, answer with the corrected code ONLY`;
+        this.prompt = `you are a software engineer, fix this code and return the line that contains the error:\n${this.codeSnippet}\n\nyour audience is 
+        programmers and give me the corrected code on another line?`;
         return this.prompt;
     }
 }
