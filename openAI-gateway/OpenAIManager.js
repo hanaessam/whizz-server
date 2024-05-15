@@ -1,32 +1,39 @@
 const OpenAI = require('openai')
-const config = require('dotenv').config;
+const dotenv = require('dotenv');
 
-class OpenAiManager {
-    constructor() {
-        this.apiKey = process.env.OPENAI_API_KEY;
-        this.prompt = "";
-        this.response = "";
-        this.model = "gpt-3.5-turbo";
+dotenv.config();
 
-    }
-    setPrompt(prompt) {
-        this.prompt = prompt;
-    }
-    async processPrompt() {
-        config();
-        this.openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY,
+const apiKey = process.env.OPENAI_API_KEY;
+const model = "gpt-3.5-turbo";
+
+const openai = new OpenAI({
+    apiKey: apiKey,
+});
+
+let prompt = "";
+
+function setPrompt(newPrompt) {
+    prompt = newPrompt;
+}
+
+async function processPrompt() {
+    console.log("api manager working");
+
+    try {
+        const completion = await openai.createChatCompletion({
+            model: model,
+            messages: [{ role: "system", content: prompt }],
         });
-        console.log("api manager working");
 
-        const completion = await this.openai.chat.completions.create({
-            messages: [{ role: "system", content: this.prompt }],
-            model: this.model
-        });
-
-        this.response = completion.choices[0].message.content;
-        return this.response;
+        const response = completion.data.choices[0].message.content;
+        return response;
+    } catch (error) {
+        console.error("Error processing prompt:", error);
+        throw error;
     }
 }
 
-module.exports = OpenAiManager;
+module.exports = {
+    setPrompt,
+    processPrompt,
+};

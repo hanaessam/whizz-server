@@ -1,17 +1,19 @@
-OpenAiManager = require('./OpenAIManager.js');
-axios = require('axios');
+const express = require('express');
+const { setPrompt, processPrompt } = require('./OpenAIManager');
 
-class OpenAIController {
-    constructor() {
-        this.openaiManager = new OpenAiManager();
-    }
-    async processPrompt(req, res) {
-        console.log("api controller working");
-        this.openaiManager.setPrompt(req.body.prompt);
-        this.response = await this.openaiManager.processPrompt();
-        console.log(this.response);
-        res.status(200).send(this.response);
-    }
+async function processPromptHandler(req, res) {
+    console.log("api controller working");
+    setPrompt(req.body.prompt);
 
+    try {
+        const response = await processPrompt();
+        console.log(response);
+        res.status(200).send(response);
+    } catch (error) {
+        res.status(500).send("Error processing prompt");
+    }
 }
-module.exports = OpenAIController;
+
+module.exports = {
+    processPromptHandler,
+};
