@@ -8,6 +8,8 @@ const authRoutes = require('./routes/authRoutes');
 const passport = require("./auth/githubAuth");
 const session = require("express-session");
 const cors = require("cors");
+const sequelize = require('./config/database'); // Database config
+
 
 const app = express();
 const port = 8888;
@@ -43,6 +45,27 @@ app.use("/openai", openaiRouter);
 app.use(authRoutes);
 // app.use("/github", githubRouter);
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+
+const testConnection = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+};
+
+const startServer = async () => {  
+  //connect to database  
+  testConnection();
+  await sequelize.authenticate();
+  await sequelize.sync();
+
+  // start server
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+
+};
+
+startServer();
