@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 const PromptGenerator = require('./prompts/PromptGenerator');
 const GeneralPromptGenerator = require('./prompts/GeneralPromptGenerator');
 const ExplainPromptGenerator = require('./prompts/ExplainPromptGenerator');
