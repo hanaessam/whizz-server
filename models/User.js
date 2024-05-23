@@ -1,29 +1,40 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('./index');
+const sequelize = require('../config/database');
+const Project = require('./Project'); // Import the Project model
 
 const User = sequelize.define('User', {
-  // Model attributes are defined here
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
-  userName: {
+  username: {
     type: DataTypes.STRING,
   },
   password: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
   },
   email: {
     type: DataTypes.STRING,
-    unique: true
-  }, 
+    unique: true,
+  },
   githubToken: {
     type: DataTypes.STRING,
-    unique: true
-  }
+    unique: true,
+  },
 }, {
   // Other model options go here
+});
+
+
+// Define associations
+User.hasMany(Project, {
+  foreignKey: 'userId',
+  as: 'projects', // This will create a method getProjects on the User model
+});
+Project.belongsTo(User, {
+  foreignKey: 'userId',
+  as: 'user', // This will create a method getUser on the Project model
 });
 
 module.exports = User;

@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const vscodeRouter = require("./routes/vscodeRoutes");
 const openaiRouter = require("./routes/openAIRoutes");
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const projectRoutes = require('./routes/projectRoutes');
 const passport = require("./auth/githubAuth");
 const session = require("express-session");
 const cors = require("cors");
@@ -42,6 +44,8 @@ app.get("/", (req, res) => {
 // Mount the router on the '/vscode' path
 app.use("/vscode", vscodeRouter);
 app.use("/openai", openaiRouter);
+app.use("", userRoutes); 
+app.use("", projectRoutes);
 app.use(authRoutes);
 // app.use("/github", githubRouter);
 
@@ -49,7 +53,7 @@ app.use(authRoutes);
 const testConnection = async () => {
   try {
     await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
+    console.log('Database connection has been established successfully.');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
