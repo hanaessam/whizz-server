@@ -1,36 +1,32 @@
 const axios = require('axios');
-
 const PromptGenerator = require('./prompts/PromptGenerator');
 const GeneralPromptGenerator = require('./prompts/GeneralPromptGenerator');
 const ExplainPromptGenerator = require('./prompts/ExplainPromptGenerator');
 const FixPromptGenerator = require('./prompts/FixPromptGenerator');
 const Message = require('./Message');
-const ChatController = require('./ChatController');
-const VSCodeController = require('../vscode-gateway/VSCodeController');
 const ResponseParser = require('./ResponseParser');
-
 
 class ChatSession {
     constructor() {
         this.currentMsg = new Message();
     }
+
     generatorFactory() {
         console.log(this.originalPrompt.body.type);
 
-        if (this.originalPrompt.body.type == "explain") {
+        if (this.originalPrompt.body.type === "explain") {
             return new ExplainPromptGenerator();
-        }
-        else if (this.originalPrompt.body.type == "fix") {
+        } else if (this.originalPrompt.body.type === "fix") {
             return new FixPromptGenerator();
-        }
-        else if (this.originalPrompt.body.type == "general"){
+        } else if (this.originalPrompt.body.type === "general") {
             return new GeneralPromptGenerator();
         }
     }
+
     async processPrompt() {
         const apiUrl = 'http://localhost:8888/openai/processPrompt';
-        console.log("sending this to gpt" + this.currentPrompt);
-        const promptData = { "prompt": this.currentPrompt };
+        console.log("sending this to gpt: " + this.currentPrompt);
+        const promptData = { prompt: this.currentPrompt };
 
         try {
             const response = await axios.post(apiUrl, promptData);
@@ -39,7 +35,7 @@ class ChatSession {
             return response.data;
         } catch (error) {
             console.error('Error fetching data from vscode API:', error);
-            throw error; // Re-throw the error so that it can be caught in the calling function
+            throw error;
         }
     }
 
@@ -61,10 +57,9 @@ class ChatSession {
             return { answer: this.currentResponse, code: parsedCode.code };
         } catch (error) {
             console.error('Error generating the prompt:', error);
-            return 'Error generating the prompt'; // or handle the error in a way that suits your application
+            return 'Error generating the prompt';
         }
     }
-
-
 }
+
 module.exports = ChatSession;
