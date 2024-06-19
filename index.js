@@ -15,6 +15,7 @@ const sequelize = require('./config/database'); // Database config
 
 const app = express();
 const port = 8888;
+app.use(express.json());
 
 app.use(
   cors({
