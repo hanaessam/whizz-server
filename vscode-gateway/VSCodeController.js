@@ -1,6 +1,7 @@
 const { setPrompt, processPrompt } = require('../openAI-gateway/OpenAIManager');
 const FileArchPromptGenerator = require('../chat-module/prompts/FileArchPromptGenerator');
 const ResponseParser = require('../chat-module/ResponseParser');
+const switchCodeLanguage = require('./SwitchCodeLanguageManager'); 
 
 class VSCodeController {
     constructor() {
@@ -41,6 +42,19 @@ class VSCodeController {
         console.error("Error generating project structure:", error);
         res.status(500).send("Error generating project structure");
       }
+    }
+    async SwitchCodeLanguage(req , res){
+      
+      const { fromLang, toLang, codeSnippet } = req.body;
+      try {
+        const code = await switchCodeLanguage(fromLang, toLang, codeSnippet);
+        console.log("from controller", code);
+        res.json(code);
+      } catch (error) {
+        console.error("Error switching code language:", error);
+        res.status(500).send("Error switching code language");
+      }
+
     }
   }
   
