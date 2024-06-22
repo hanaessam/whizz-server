@@ -12,17 +12,37 @@ exports.createUser = async (req, res) => {
 
     // Create a new user
     const newUser = await User.create({ username, email, password, githubToken });
-    res.status(201).json(newUser);
+    // Return a sanitized response (exclude password)
+    const sanitizedUser = {
+      id: newUser.id,
+      username: newUser.username,
+      email: newUser.email,
+      createdAt: newUser.createdAt,
+      updatedAt: newUser.updatedAt,
+    };
+    res.status(201).json(sanitizedUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 // Get all users
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
-    res.status(200).json(users);
+    // Fetch all users from the database
+    const users = await User.findAll({
+      attributes: { exclude: ['password', 'githubToken'] } // Exclude sensitive fields
+    });
+
+    // Return sanitized response (exclude sensitive fields)
+    const sanitizedUsers = users.map(user => ({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    }));
+
+    res.status(200).json(sanitizedUsers);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -32,8 +52,16 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id);
+    // Return a sanitized response (exclude password)
+    const sanitizedUser = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
     if (user) {
-      res.status(200).json(user);
+      res.status(200).json(sanitizedUser);
     } else {
       res.status(404).json({ error: 'User not found' });
     }
@@ -52,7 +80,14 @@ exports.updateUserById = async (req, res) => {
     );
     if (updated) {
       const updatedUser = await User.findByPk(req.params.id);
-      res.status(200).json(updatedUser);
+      sanitizedUser = {
+        id: updatedUser.id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        createdAt: updatedUser.createdAt,
+        updatedAt: updatedUser.updatedAt,
+      };
+      res.status(200).json(sanitizedUser);
     } else {
       res.status(404).json({ error: 'User not found' });
     }

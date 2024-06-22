@@ -4,13 +4,14 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const vscodeRouter = require("./routes/vscodeRoutes");
 const openaiRouter = require("./routes/openAIRoutes");
-const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
-const projectRoutes = require('./routes/projectRoutes');
+const projectRoutes = require('./routes/projectRoutes.js');
 const passport = require("./auth/githubAuth");
+const gihtubAuthRoutes = require('./routes/githubAuthRoutes.js'); 
+const localAuthRoutes = require('./routes/localAuthRoutes.js');
 const session = require("express-session");
 const cors = require("cors");
-const sequelize = require('./config/database'); // Database config
+const sequelize = require('./config/database'); 
 
 
 const app = express();
@@ -47,7 +48,8 @@ app.use("/vscode", vscodeRouter);
 app.use("/openai", openaiRouter);
 app.use("", userRoutes); 
 app.use("", projectRoutes);
-app.use(authRoutes);
+app.use(gihtubAuthRoutes);
+app.use(localAuthRoutes);
 // app.use("/github", githubRouter);
 
 

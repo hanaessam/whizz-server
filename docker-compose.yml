@@ -1,17 +1,25 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:13
-    container_name: whizz_postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: whizz
+  server:
+    build: .
     ports:
-      - "5433:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - "8888:8888"
+    depends_on:
+      db:
+        condition: service_healthy
 
-volumes:
-  postgres_data:
+  db:
+    image: 'postgres'
+    ports: 
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'root'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql

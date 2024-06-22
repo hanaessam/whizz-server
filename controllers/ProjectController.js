@@ -1,9 +1,15 @@
+// controllers/projectController.js
+
+const { UniqueConstraintError } = require('sequelize');
 const Project = require('../models/Project');
+const User = require('../models/User'); 
+const { saveSummaryToFile, getSummaryFromFile } = require('../utils/fileUtils');
+const fs = require('fs');
 
 // Create a new project
 exports.createProject = async (req, res) => {
   try {
-    const { path, title, description, userId } = req.body;
+    const { path, userId } = req.body;
 
     // Generate the project ID by combining path and userId
     const id = `${path}_${userId}`;
@@ -12,21 +18,30 @@ exports.createProject = async (req, res) => {
     const newProject = await Project.create({
       id,
       path,
-      title,
-      description,
       userId,
     });
 
     res.status(201).json(newProject);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error instanceof UniqueConstraintError) {
+      // Handle specific error for duplicate entry (path and userId)
+      res.status(400).json({ error: 'Duplicate project entry. Cannot create project.' });
+    } else {
+      // Handle other errors
+      res.status(500).json({ error: error.message });
+    }
   }
 };
 
 // Get all projects
 exports.getAllProjects = async (req, res) => {
   try {
-    const projects = await Project.findAll();
+    const projects = await Project.findAll({
+      attributes: ['id', 'summaryPath'],
+      include: [
+        { model: User, attributes: [], as: 'user' }, // Include User model with alias 'user'
+      ],
+    });
     res.status(200).json(projects);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -36,7 +51,12 @@ exports.getAllProjects = async (req, res) => {
 // Get a project by ID
 exports.getProjectById = async (req, res) => {
   try {
-    const project = await Project.findByPk(req.params.id);
+    const project = await Project.findByPk(req.params.id, {
+      attributes: ['id', 'summaryPath'],
+      include: [
+        { model: User, attributes: [] }, // Exclude User details from response
+      ],
+    });
     if (project) {
       res.status(200).json(project);
     } else {
@@ -47,25 +67,48 @@ exports.getProjectById = async (req, res) => {
   }
 };
 
-// Update a project by ID
-exports.updateProjectById = async (req, res) => {
+// Update project summary by ID
+exports.updateProjectSummary = async (req, res) => {
   try {
-    const { path, title, description, userId } = req.body;
+    const projectId = req.params.id;
+    const { summaryContent } = req.body;
 
-    // Generate the project ID by combining path and userId
-    const id = `${path}_${userId}`;
+    // Find the project by ID
+    const project = await Project.findByPk(projectId);
 
-    const [updated] = await Project.update(
-      { id, path, title, description, userId},
-      { where: { id: req.params.id } }
-    );
-
-    if (updated) {
-      const updatedProject = await Project.findByPk(id);
-      res.status(200).json(updatedProject);
-    } else {
-      res.status(404).json({ error: 'Project not found' });
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
     }
+
+    // Save summary to a file and get the file path
+    const summaryPath = await saveSummaryToFile(projectId, summaryContent);
+
+    // Update the project with the new summary path
+    project.summaryPath = summaryPath;
+    await project.save();
+
+    res.status(200).json({ message: 'Project summary updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get project summary by ID
+exports.getProjectSummary = async (req, res) => {
+  try {
+    const projectId = req.params.id;
+
+    // Get the summary file path for the project
+    const summaryPath = await getSummaryFromFile(projectId);
+
+    if (!summaryPath) {
+      return res.status(404).json({ error: 'Summary not found for this project' });
+    }
+
+    // Read the summary file content
+    const summaryContent = fs.readFileSync(summaryPath, 'utf8');
+
+    res.status(200).json({ summaryContent });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
