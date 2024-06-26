@@ -53,20 +53,20 @@ app.use(localAuthRoutes);
 // app.use("/github", githubRouter);
 
 
-const testConnection = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('Database connection has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-};
+// const testConnection = async () => {
+//   try {
+//     await sequelize.authenticate();
+//     console.log('Database connection has been established successfully.');
+//   } catch (error) {
+//     console.error('Unable to connect to the database:', error);
+//   }
+// };
 
 const startServer = async () => {  
-  //connect to database  
-  testConnection();
-  await sequelize.authenticate();
-  await sequelize.sync();
+  // //connect to database  
+  // testConnection();
+  // await sequelize.authenticate();
+  // await sequelize.sync();
 
   // start server
   app.listen(port, () => {
