@@ -6,6 +6,7 @@ const Document = require('../code-documentation/Document');
 const DocumentFieldManager = require('../code-documentation/DocumentFieldManager');
 const PDFGenerator = require('../code-documentation/PDFGenerator');
 const DocxGenerator = require('../code-documentation/DocxGenerator');
+const MarkdownGenerator = require('../code-documentation/MarkdownGenerator');
 const path = require('path');
 
 
@@ -87,7 +88,10 @@ class VSCodeController {
         }
         
         console.log("Document content generated:", document);
-        const filename = path.join(projectPath, `documentation.${format === 'pdf' ? 'pdf' : 'docx'}`);
+        const filename = path.join(projectPath, `documentation.${
+          // switch pdf, docx, md
+          format === 'pdf' ? 'pdf' : format === 'docx' ? 'docx' : 'md'
+        }`);
         if (format === 'pdf') {
             const pdfGenerator = new PDFGenerator();
             for (const [field, content] of Object.entries(document.getContent())) {
@@ -104,6 +108,14 @@ class VSCodeController {
             await docxGenerator.generate(document, filename);
           
             res.status(200).send({ message: `DOCX documentation generated successfully at ${filename}` });
+        }
+        else if (format === 'md') {
+            const markdownGenerator = new MarkdownGenerator();
+            for (const [field, content] of Object.entries(document.getContent())) {
+                markdownGenerator.addMarkdownContent(content);
+            }
+            await markdownGenerator.generate(document, filename);
+            res.status(200).send({ message: `Markdown documentation generated successfully at ${filename}` });
         }
        
       } catch (error) {
