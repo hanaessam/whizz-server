@@ -14,6 +14,8 @@ const cors = require("cors");
 const sequelize = require('./config/database'); 
 
 
+
+
 const app = express();
 const port = 8888;
 app.use(express.json());
@@ -76,3 +78,4 @@ const startServer = async () => {
 };
 
 startServer();
+

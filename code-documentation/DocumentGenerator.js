@@ -1,5 +1,5 @@
-const { setPrompt, processPrompt } = require('./OpenAIManager');
-const CodeDocPromptGenerator = require('./CodeDocPromptGenerator');
+const { setPrompt, processPrompt } = require('../openAI-gateway/OpenAIManager');
+const CodeDocPromptGenerator = require('../chat-module/prompts/CodeDocPromptGenerator');
 
 class DocumentGenerator {
     constructor() {}
