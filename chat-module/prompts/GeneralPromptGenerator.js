@@ -11,7 +11,7 @@ class GeneralPromptGenerator extends PromptGenerator {
     }
 
     generatePrompt() {
-        this.prompt = `${this.prompt},\n${this.codeSnippet}\n`;
+        this.prompt = `${this.prompt}, selected code snippet: \n${this.codeSnippet}\n`;
         return this.prompt;
     }
 }
