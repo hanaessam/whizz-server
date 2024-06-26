@@ -94,11 +94,15 @@ class VSCodeController {
                 pdfGenerator.addMarkdownContent(content);
             }
            
-            pdfGenerator.saveToFile(filename);
+            await pdfGenerator.generate(document, filename);
             res.status(200).send({ message: `PDF documentation generated successfully at ${filename}` });
         } else if (format === 'docx') {
-          const docxGenerator = new DocxGenerator();
-          await docxGenerator.generate(document.getContent(), filename);
+            const docxGenerator = new DocxGenerator();
+            for (const [field, content] of Object.entries(document.getContent())) {
+                docxGenerator.addMarkdownContent(content);
+            }
+            await docxGenerator.generate(document, filename);
+          
             res.status(200).send({ message: `DOCX documentation generated successfully at ${filename}` });
         }
        

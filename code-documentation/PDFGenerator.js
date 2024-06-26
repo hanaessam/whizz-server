@@ -1,10 +1,12 @@
 const PDFDocument = require('pdfkit');
+const DocumentGenerator = require('./DocumentGenerator');
 const fs = require('fs');
 const { marked } = require('marked');
 const { JSDOM } = require('jsdom');
 
-class PDFGenerator {
+class PDFGenerator extends DocumentGenerator {
     constructor() {
+        super();
         this.doc = new PDFDocument();
     }
 
@@ -45,12 +47,13 @@ class PDFGenerator {
         }
     }
 
-    saveToFile(filename) {
+    async generate(document, filename) {
+        for (const [field, content] of Object.entries(document.getContent())) {
+            this.addMarkdownContent(content);
+        }
         this.doc.pipe(fs.createWriteStream(filename));
         this.doc.end();
     }
 }
 
 module.exports = PDFGenerator;
-
-

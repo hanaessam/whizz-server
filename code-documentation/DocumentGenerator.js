@@ -19,6 +19,11 @@ class DocumentGenerator {
             throw new Error('Failed to generate documentation content: ' + error.message);
         }
     }
+
+    
+    async generate(document, filename) {
+        throw new Error('Abstract method generate() must be implemented by subclass');
+    }
 }
 
 module.exports = DocumentGenerator;
