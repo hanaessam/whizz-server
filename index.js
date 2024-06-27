@@ -18,7 +18,7 @@ const sequelize = require('./config/database');
 
 
 const app = express();
-const port = 8888;
+const port = 8889;
 app.use(express.json());
 
 app.use(
@@ -56,20 +56,20 @@ app.use(gihtubAuthRoutes);
 app.use(localAuthRoutes);
 
 
-// const testConnection = async () => {
-//   try {
-//     await sequelize.authenticate();
-//     console.log('Database connection has been established successfully.');
-//   } catch (error) {
-//     console.error('Unable to connect to the database:', error);
-//   }
-// };
+const testConnection = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+};
 
 const startServer = async () => {  
   // //connect to database  
-  // testConnection();
-  // await sequelize.authenticate();
-  // await sequelize.sync();
+  testConnection();
+  await sequelize.authenticate();
+  await sequelize.sync();
 
   // start server
   app.listen(port, () => {
