@@ -1,8 +1,14 @@
-
 class Document {
-    constructor(title, content) {
-        this.title = title;
-        this.content = content;
+    constructor() {
+        this.content = {};
+    }
+
+    setContent(field, content) {
+        this.content[field] = content;
+    }
+
+    getContent() {
+        return this.content;
     }
 }
 

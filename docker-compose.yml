@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  server:
+    build: .
+    ports:
+      - "8888:8888"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: 'postgres'
+    ports: 
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'root'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
