@@ -2,6 +2,7 @@ const ProjectFileManager = require("../file-architecture/ProjectFileManager");
 
 const CodeDocumentationManager = require("../code-documentation/CodeDocumentationManager");
 const path = require("path");
+const switchCodeLanguage = require('./SwitchCodeLanguageManager'); 
 
 class VSCodeController {
   constructor() {
@@ -55,6 +56,19 @@ class VSCodeController {
       res.status(500).send("Error generating documentation");
     }
   }
-}
+    async SwitchCodeLanguage(req , res){
+      
+      const { fromLang, toLang, codeSnippet } = req.body;
+      try {
+        const code = await switchCodeLanguage(fromLang, toLang, codeSnippet);
+        console.log("from controller", code);
+        res.json(code);
+      } catch (error) {
+        console.error("Error switching code language:", error);
+        res.status(500).send("Error switching code language");
+      }
 
+    }
+}
 module.exports = VSCodeController;
+
