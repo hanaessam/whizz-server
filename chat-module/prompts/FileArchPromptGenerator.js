@@ -53,12 +53,12 @@ class FileArchPromptGenerator extends PromptGenerator {
             }
           ],
           "commands": [
-            "npm init -y",
-            "npm install <framework>",
-            "command 3"
+            "command1",
+            "command2",
+            "command3"
           ]
         }\n
-        Ensure that the response is valid JSON and includes the necessary commands in a clear and executable format.`;
+        Ensure that the response is valid JSON and includes the necessary terminal commands that is concerned with the techonology used in the project in a clear and executable format.`;
         return this.prompt;
       }
     }

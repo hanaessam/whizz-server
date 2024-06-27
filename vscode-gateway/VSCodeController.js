@@ -1,10 +1,12 @@
 const { setPrompt, processPrompt } = require('../openAI-gateway/OpenAIManager');
 const FileArchPromptGenerator = require('../chat-module/prompts/FileArchPromptGenerator');
 const ResponseParser = require('../chat-module/ResponseParser');
+const ProjectFileManager = require('../file-architecture/ProjectFileManager');
 
 class VSCodeController {
     constructor() {
       this.highlightedCode = "";
+      this.projectFileManager = new ProjectFileManager();
     }
   
     getHighlightedCode(req, res) {
@@ -12,36 +14,21 @@ class VSCodeController {
       console.log("Highlighted text received:", this.highlightedCode);
       res.status(200).send(this.highlightedCode);
     }
-  
+
     async generateProjectStructure(req, res) {
-      const { projectName, projectDescription, projectFramework } = req.body;
-  
-      // Generate the prompt
-      const promptGenerator = new FileArchPromptGenerator();
-      promptGenerator.setProjectName(projectName);
-      promptGenerator.setProjectDescription(projectDescription);
-      promptGenerator.setProjectFramework(projectFramework);
-  
-      const prompt = promptGenerator.generatePrompt();
-      setPrompt(prompt);
+      const projectDetails = req.body;
+      console.log("Project details received:", projectDetails);
   
       try {
-        // Process the prompt to get a response from OpenAI
-        const aiResponse = await processPrompt();
-        console.log("AI Response:", aiResponse);
-  
-        // Parse the response to get a project structure
-        const parser = new ResponseParser(aiResponse);
-        const projectStructure = parser.parseFileArch();
-  
-        console.log("Parsed Project Structure:", projectStructure);
-  
-        res.json(projectStructure);
+        const projectStructure = await this.projectFileManager.generateProjectStructure(projectDetails);
+        res.status(200).send(projectStructure);
       } catch (error) {
         console.error("Error generating project structure:", error);
         res.status(500).send("Error generating project structure");
       }
     }
+  
+   
   }
   
   module.exports = VSCodeController;
