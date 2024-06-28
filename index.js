@@ -7,12 +7,12 @@ const openaiRouter = require("./routes/openAIRoutes");
 const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes.js');
 const passport = require("./auth/githubAuth");
-const gihtubAuthRoutes = require('./routes/githubAuthRoutes.js'); 
+const gihtubAuthRoutes = require('./routes/githubAuthRoutes.js');
 const localAuthRoutes = require('./routes/localAuthRoutes.js');
 // const summaryRoutes = require('./routes/summaryRoutes.js');
 const session = require("express-session");
 const cors = require("cors");
-const sequelize = require('./config/database'); 
+const sequelize = require('./config/database');
 
 
 
@@ -50,7 +50,7 @@ app.get("/", (req, res) => {
 app.use("/vscode", vscodeRouter);
 app.use("/openai", openaiRouter);
 // app.use("", summaryRoutes);
-app.use("", userRoutes); 
+app.use("", userRoutes);
 app.use("", projectRoutes);
 app.use(gihtubAuthRoutes);
 app.use(localAuthRoutes);
@@ -65,7 +65,7 @@ const testConnection = async () => {
   }
 };
 
-const startServer = async () => {  
+const startServer = async () => {
   // //connect to database  
   testConnection();
   await sequelize.authenticate();

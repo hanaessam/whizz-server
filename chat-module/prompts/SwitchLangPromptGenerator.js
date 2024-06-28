@@ -9,15 +9,16 @@ class SwitchCodeLanguagePromptGenerator extends PromptGenerator {
     setCodeSnippet(codeSnippet) {
         this.codeSnippet = codeSnippet;
     }
-    setFromLanguage(language){
+    setFromLanguage(language) {
         this.fromLanguage = language;
     }
-    setToLanguage(language){
+    setToLanguage(language) {
         this.toLanguage = language;
     }
     generatePrompt() {
-        this.prompt = `rewrite the following ${this.fromLanguage} code in ${this.toLanguage}, convert the code from ${this.fromLanguage} to ${this.toLanguage} :\n`+
-        `${this.codeSnippet}\n\n the response must be code only `;
+        this.prompt = `rewrite the following ${this.fromLanguage} code in ${this.toLanguage}, convert the code from ${this.fromLanguage} to ${this.toLanguage} :\n` +
+            `${this.codeSnippet}\n\n the response must be code only `;
+        console.log(this.prompt);
         return this.prompt;
     }
 }
