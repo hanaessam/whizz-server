@@ -12,8 +12,9 @@ class SummarizePromptGenerator extends PromptGenerator {
     }
     generatePrompt() {
         console.log("THIS IS THE CODE SNIPPET: " + this.codeSnippet + '\n');
-        this.prompt = `you are a software engineer, summarize important things in this file :\n${this.codeSnippet}\n\n . Response should be summary only`;
+        this.prompt = `you are a software engineer, summarize this file in a couple of sentences:\n${this.codeSnippet}\n\n . Response should be the summary only.`;
         return this.prompt;
     }
 }
+
 module.exports = SummarizePromptGenerator;
