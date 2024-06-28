@@ -18,7 +18,7 @@ const sequelize = require('./config/database');
 
 
 const app = express();
-const port = 8889;
+const port = 8888;
 app.use(express.json());
 
 app.use(
