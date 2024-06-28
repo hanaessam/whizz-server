@@ -15,8 +15,10 @@ const cors = require("cors");
 const sequelize = require('./config/database'); 
 
 
+
+
 const app = express();
-const port = 8888;
+const port = 8889;
 app.use(express.json());
 
 app.use(
@@ -64,7 +66,7 @@ const testConnection = async () => {
 };
 
 const startServer = async () => {  
-  //connect to database  
+  // //connect to database  
   testConnection();
   await sequelize.authenticate();
   await sequelize.sync();
@@ -77,3 +79,4 @@ const startServer = async () => {
 };
 
 startServer();
+
