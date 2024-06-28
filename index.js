@@ -9,7 +9,7 @@ const projectRoutes = require('./routes/projectRoutes.js');
 const passport = require("./auth/githubAuth");
 const gihtubAuthRoutes = require('./routes/githubAuthRoutes.js'); 
 const localAuthRoutes = require('./routes/localAuthRoutes.js');
-const summaryRoutes = require('./routes/summaryRoutes.js');
+// const summaryRoutes = require('./routes/summaryRoutes.js');
 const session = require("express-session");
 const cors = require("cors");
 const sequelize = require('./config/database'); 
@@ -49,7 +49,7 @@ app.get("/", (req, res) => {
 // Mount the router on the '/vscode' path
 app.use("/vscode", vscodeRouter);
 app.use("/openai", openaiRouter);
-app.use("/openai", summaryRoutes);
+// app.use("", summaryRoutes);
 app.use("", userRoutes); 
 app.use("", projectRoutes);
 app.use(gihtubAuthRoutes);

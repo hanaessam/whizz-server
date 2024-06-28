@@ -1,7 +1,6 @@
-const express = require('express');
-const summaryRouter = express.Router();
-const summaryController = require('../code-summary/summaryController')
+// const express = require('express');
+// const summaryRouter = express.Router();
 
-summaryRouter.post("/summarize", summaryController.handleSummaryRequest);
+// summaryRouter.post("/summarize", summaryController.handleSummaryRequest);
 
-module.exports = summaryRouter;
+// module.exports = summaryRouter;
