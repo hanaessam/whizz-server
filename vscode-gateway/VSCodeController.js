@@ -1,47 +1,74 @@
-const { setPrompt, processPrompt } = require('../openAI-gateway/OpenAIManager');
-const FileArchPromptGenerator = require('../chat-module/prompts/FileArchPromptGenerator');
-const ResponseParser = require('../chat-module/ResponseParser');
+const ProjectFileManager = require("../file-architecture/ProjectFileManager");
+
+const CodeDocumentationManager = require("../code-documentation/CodeDocumentationManager");
+const path = require("path");
+const switchCodeLanguage = require('../switch-code-language/SwitchCodeLanguageManager'); 
 
 class VSCodeController {
-    constructor() {
-      this.highlightedCode = "";
+  constructor() {
+    this.highlightedCode = "";
+    this.projectFileManager = new ProjectFileManager();
+    this.codeDocumentationManager = new CodeDocumentationManager();
+  }
+
+  getHighlightedCode(req, res) {
+    this.highlightedCode = req.body.highlightedCode;
+    console.log("Highlighted text received:", this.highlightedCode);
+    res.status(200).send(this.highlightedCode);
+  }
+
+  getProjectPath(req, res) {
+    const projectPath = req.body.projectPath;
+    if (!projectPath) {
+      console.error("Project path not provided");
+      return res.status(400).send("Project path is required");
     }
-  
-    getHighlightedCode(req, res) {
-      this.highlightedCode = req.body.highlightedCode;
-      console.log("Highlighted text received:", this.highlightedCode);
-      res.status(200).send(this.highlightedCode);
-    }
-  
-    async generateProjectStructure(req, res) {
-      const { projectName, projectDescription, projectFramework } = req.body;
-  
-      // Generate the prompt
-      const promptGenerator = new FileArchPromptGenerator();
-      promptGenerator.setProjectName(projectName);
-      promptGenerator.setProjectDescription(projectDescription);
-      promptGenerator.setProjectFramework(projectFramework);
-  
-      const prompt = promptGenerator.generatePrompt();
-      setPrompt(prompt);
-  
-      try {
-        // Process the prompt to get a response from OpenAI
-        const aiResponse = await processPrompt();
-        console.log("AI Response:", aiResponse);
-  
-        // Parse the response to get a project structure
-        const parser = new ResponseParser(aiResponse);
-        const projectStructure = parser.parseFileArch();
-  
-        console.log("Parsed Project Structure:", projectStructure);
-  
-        res.json(projectStructure);
-      } catch (error) {
-        console.error("Error generating project structure:", error);
-        res.status(500).send("Error generating project structure");
-      }
+    console.log("Project path received:", projectPath);
+    console.log(res);
+    res.status(200).send(projectPath);
+  }
+
+  async generateProjectStructure(req, res) {
+    const projectDetails = req.body;
+    console.log("Project details received:", projectDetails);
+
+    try {
+      const projectStructure =
+        await this.projectFileManager.generateProjectStructure(projectDetails);
+      res.status(200).send(projectStructure);
+    } catch (error) {
+      console.error("Error generating project structure:", error);
+      res.status(500).send("Error generating project structure");
     }
   }
-  
-  module.exports = VSCodeController;
+
+  async generateDocumentation(req, res) {
+    const documentationDetails = req.body;
+    console.log("Documentation details received:", documentationDetails);
+    try {
+      const response =
+        await this.codeDocumentationManager.generateDocumentation(
+          documentationDetails
+        );
+      res.status(200).send(response);
+    } catch (error) {
+      console.error("Error generating documentation:", error);
+      res.status(500).send("Error generating documentation");
+    }
+  }
+    async SwitchCodeLanguage(req , res){
+      
+      const { fromLanguage, toLanguage, codeSnippet } = req.body;
+      try {
+        const code = await switchCodeLanguage(fromLanguage, toLanguage, codeSnippet);
+        console.log("from controller", code);
+        res.status(200).send(code);
+      } catch (error) {
+        console.error("Error switching code language:", error);
+        res.status(500).send("Error switching code language");
+      }
+
+    }
+}
+module.exports = VSCodeController;
+

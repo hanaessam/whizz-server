@@ -4,10 +4,18 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const vscodeRouter = require("./routes/vscodeRoutes");
 const openaiRouter = require("./routes/openAIRoutes");
-const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const projectRoutes = require('./routes/projectRoutes.js');
 const passport = require("./auth/githubAuth");
+const gihtubAuthRoutes = require('./routes/githubAuthRoutes.js');
+const localAuthRoutes = require('./routes/localAuthRoutes.js');
+// const summaryRoutes = require('./routes/summaryRoutes.js');
 const session = require("express-session");
 const cors = require("cors");
+const sequelize = require('./config/database');
+
+
+
 
 const app = express();
 const port = 8888;
@@ -30,7 +38,8 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' })); // Adjust the limit as needed
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' })); // Adjust the limit as needed
 
 app.get("/", (req, res) => {
   res.send("Hello World! This is your first web service.");
@@ -41,9 +50,34 @@ app.get("/", (req, res) => {
 // Mount the router on the '/vscode' path
 app.use("/vscode", vscodeRouter);
 app.use("/openai", openaiRouter);
-app.use(authRoutes);
-// app.use("/github", githubRouter);
+// app.use("", summaryRoutes);
+app.use("", userRoutes);
+app.use("", projectRoutes);
+app.use(gihtubAuthRoutes);
+app.use(localAuthRoutes);
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+
+const testConnection = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+};
+
+const startServer = async () => {
+  // //connect to database  
+  testConnection();
+  await sequelize.authenticate();
+  await sequelize.sync();
+
+  // start server
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+
+};
+
+startServer();
+
