@@ -3,6 +3,7 @@ const ProjectFileManager = require("../file-architecture/ProjectFileManager");
 const CodeDocumentationManager = require("../code-documentation/CodeDocumentationManager");
 const path = require("path");
 const switchCodeLanguage = require('../switch-code-language/SwitchCodeLanguageManager'); 
+const UnitTestsEndpoint = require('../unit_tests/UnitTestsEndpoint'); 
 
 class VSCodeController {
   constructor() {
@@ -68,6 +69,18 @@ class VSCodeController {
         res.status(500).send("Error switching code language");
       }
 
+    }
+    async UnitTestsEndpoint(req,res) {
+      const code_snippet = req.body;
+      try {
+        const aiResponse = await UnitTestsEndpoint(code_snippet);
+        console.log("Generated unit tests:", aiResponse);
+        res.status(200).send(aiResponse);
+      }
+      catch (error) {
+        console.error("Error generating unit tests:", error);
+        res.status(500).send("Error generating unit tests");
+    }
     }
 }
 module.exports = VSCodeController;
