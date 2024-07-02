@@ -9,5 +9,6 @@ vscodeRouter.post('/generate-project', vscodeController.generateProjectStructure
 vscodeRouter.post('/generate-documentation', vscodeController.generateDocumentation.bind(vscodeController));
 
 vscodeRouter.post('/switch-code-language', vscodeController.SwitchCodeLanguage.bind(vscodeController) );
+vscodeRouter.post('/unit_tests', vscodeController.UnitTestsEndpoint.bind(vscodeController) );
 
 module.exports = vscodeRouter;

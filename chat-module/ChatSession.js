@@ -5,6 +5,7 @@ const ExplainPromptGenerator = require('./prompts/ExplainPromptGenerator');
 const FixPromptGenerator = require('./prompts/FixPromptGenerator');
 const Message = require('./Message');
 const ResponseParser = require('./ResponseParser');
+const extractCodeInLanguage = require('../parsers/switchCodeParser')
 
 class ChatSession {
     constructor() {
@@ -46,15 +47,16 @@ class ChatSession {
         this.promptGenerator = this.generatorFactory();
         this.promptGenerator.setCodeSnippet(this.originalPrompt.body.codesnippet);
         this.promptGenerator.setPrompt(this.originalPrompt.body.prompt);
+        this.promptGenerator.setSummary(this.originalPrompt.body.summary);
         this.currentPrompt = this.promptGenerator.generatePrompt(this.originalPrompt);
         console.log('here we are in chat session processing input');
-
+        console.log(this.currentPrompt);
         try {
             this.currentResponse = await this.processPrompt();
             const parser = new ResponseParser(this.currentResponse);
-            const parsedCode = parser.parseResponse(this.currentResponse);
+            const parsedCode = extractCodeInLanguage(this.currentResponse);
 
-            return { answer: this.currentResponse, code: parsedCode.code };
+            return { answer: this.currentResponse, code: parsedCode };
         } catch (error) {
             console.error('Error generating the prompt:', error);
             return 'Error generating the prompt';

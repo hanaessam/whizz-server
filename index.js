@@ -38,7 +38,8 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' })); // Adjust the limit as needed
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' })); // Adjust the limit as needed
 
 app.get("/", (req, res) => {
   res.send("Hello World! This is your first web service.");
