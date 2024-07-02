@@ -11,7 +11,7 @@ const model = "gpt-3.5-turbo";
 
 const openai = new OpenAI({
     apiKey: apiKey,
-    organization: organization,
+    // organization: organization,
     project: project,
 });
 

@@ -3,7 +3,7 @@ const passport = require('../auth/localAuth');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const router = express.Router();
-const secretKey = 'your_secret_key'; // Use a secure key and store it safely
+const secretKey = 'boat_yogurt_khofo'; 
 
 // Sign-Up Route
 router.post('/signup', async (req, res) => {
@@ -38,7 +38,7 @@ router.post('/login', (req, res, next) => {
     if (!user) return res.status(401).json({ error: info.message });
 
     const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '1h' });
-    res.status(200).json({ token });
+    res.status(200).json({ token, userId: user.id, key: user.openAiKey, keyExpiry: user.openAiKeyExpiry});
   })(req, res, next);
 });
 

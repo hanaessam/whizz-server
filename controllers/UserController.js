@@ -10,8 +10,11 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ error: 'You must provide either email and password or a GitHub token.' });
     }
 
+    const openAiKey = OPENAI_API_KEY;
+    const openAiKeyExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    
     // Create a new user
-    const newUser = await User.create({ username, email, password, githubToken });
+    const newUser = await User.create({ username, email, password, githubToken, openAiKey, openAiKeyExpiry});
     // Return a sanitized response (exclude password)
     const sanitizedUser = {
       id: newUser.id,
@@ -19,6 +22,7 @@ exports.createUser = async (req, res) => {
       email: newUser.email,
       createdAt: newUser.createdAt,
       updatedAt: newUser.updatedAt,
+
     };
     res.status(201).json(sanitizedUser);
   } catch (error) {
@@ -107,6 +111,50 @@ exports.deleteUserById = async (req, res) => {
     } else {
       res.status(404).json({ error: 'User not found' });
     }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const foreverDate = new Date('9999-12-31T23:59:59.999Z');
+
+exports.addOpenAiKey = async (req, res) => {
+  try {
+    const { trial, openAiKey, userId } = req.body;
+    const user = await User.findByPk(userId);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    let updateData = {};
+    if (trial) {
+      updateData.openAiKey = OPENAI_API_KEY;
+      updateData.openAiKeyExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    } else {
+      updateData.openAiKey = openAiKey;
+      updateData.openAiKeyExpiry = foreverDate; 
+    }
+
+    await user.update(updateData);
+
+    res.status(200).json({ message: 'OpenAI key added successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.removeOpenAiKey = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    await user.update({
+      openAiKey: null,
+      openAiKeyExpiry: null
+    });
+    res.status(200).json({ message: 'OpenAI key removed successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

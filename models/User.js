@@ -22,6 +22,13 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     unique: true,
   },
+  openAiKey:{
+    type: DataTypes.STRING,
+    unique: false,
+  },
+  openAiKeyExpiry: {
+    type: DataTypes.DATE,
+  },
 }, {
   hooks: {
     beforeCreate: async (user) => {
