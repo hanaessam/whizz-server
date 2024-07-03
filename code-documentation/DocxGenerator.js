@@ -3,6 +3,7 @@ const DocumentGenerator = require('./DocumentGenerator');
 const { Document, Packer, Paragraph, TextRun, HeadingLevel } = require("docx");
 const { marked } = require('marked');
 const { JSDOM } = require('jsdom');
+const path = require('path');
 
 class DocxGenerator extends DocumentGenerator {
     constructor() {
@@ -61,13 +62,18 @@ class DocxGenerator extends DocumentGenerator {
                     break;
                 case 'ul':
                     Array.from(element.children).forEach(li => {
-                        this.currentSection.children.push(new Paragraph(li.textContent, { bullet: { level: 0 } }));
+                        this.currentSection.children.push(new Paragraph({
+                            text: li.textContent,
+                            bullet: { level: 0 }
+                        }));
                     });
-                    continue; 
-                
+                    continue;
                 case 'ol':
                     Array.from(element.children).forEach((li, index) => {
-                        this.currentSection.children.push(new Paragraph(li.textContent, { numbering: { level: 0, custom: true, format: 'decimal', start: index + 1 } }));
+                        this.currentSection.children.push(new Paragraph({
+                            text: li.textContent,
+                            numbering: { level: 0, custom: true, format: 'decimal', start: index + 1 }
+                        }));
                     });
                     continue;
                 default:
@@ -87,6 +93,11 @@ class DocxGenerator extends DocumentGenerator {
             this.doc.addSection(this.currentSection); // Add the accumulated section to the document
 
             const buffer = await Packer.toBuffer(this.doc);
+            
+            // Ensure directory exists
+            const directory = path.dirname(filename);
+            await fs.mkdir(directory, { recursive: true });
+
             await fs.writeFile(filename, buffer);
             console.log("Document generated successfully.");
         } catch (error) {

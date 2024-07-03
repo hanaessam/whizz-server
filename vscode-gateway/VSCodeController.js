@@ -2,14 +2,13 @@ const ProjectFileManager = require("../file-architecture/ProjectFileManager");
 
 const CodeDocumentationManager = require("../code-documentation/CodeDocumentationManager");
 const path = require("path");
-const switchCodeLanguage = require('../switch-code-language/SwitchCodeLanguageManager'); 
-const UnitTestsEndpoint = require('../unit_tests/UnitTestsEndpoint'); 
+const switchCodeLanguage = require("../switch-code-language/SwitchCodeLanguageManager");
+const UnitTestsEndpoint = require("../unit_tests/UnitTestsEndpoint");
 
 class VSCodeController {
   constructor() {
     this.highlightedCode = "";
     this.projectFileManager = new ProjectFileManager();
-    this.codeDocumentationManager = new CodeDocumentationManager();
   }
 
   getHighlightedCode(req, res) {
@@ -44,6 +43,7 @@ class VSCodeController {
   }
 
   async generateDocumentation(req, res) {
+    this.codeDocumentationManager = new CodeDocumentationManager();
     const documentationDetails = req.body;
     console.log("Documentation details received:", documentationDetails);
     try {
@@ -57,31 +57,31 @@ class VSCodeController {
       res.status(500).send("Error generating documentation");
     }
   }
-    async SwitchCodeLanguage(req , res){
-      
-      const { fromLanguage, toLanguage, codeSnippet } = req.body;
-      try {
-        const code = await switchCodeLanguage(fromLanguage, toLanguage, codeSnippet);
-        console.log("from controller", code);
-        res.status(200).send(code);
-      } catch (error) {
-        console.error("Error switching code language:", error);
-        res.status(500).send("Error switching code language");
-      }
-
+  async SwitchCodeLanguage(req, res) {
+    const { fromLanguage, toLanguage, codeSnippet } = req.body;
+    try {
+      const code = await switchCodeLanguage(
+        fromLanguage,
+        toLanguage,
+        codeSnippet
+      );
+      console.log("from controller", code);
+      res.status(200).send(code);
+    } catch (error) {
+      console.error("Error switching code language:", error);
+      res.status(500).send("Error switching code language");
     }
-    async UnitTestsEndpoint(req,res) {
-      const code_snippet = req.body;
-      try {
-        const aiResponse = await UnitTestsEndpoint(code_snippet);
-        console.log("Generated unit tests:", aiResponse);
-        res.status(200).send(aiResponse);
-      }
-      catch (error) {
-        console.error("Error generating unit tests:", error);
-        res.status(500).send("Error generating unit tests");
+  }
+  async UnitTestsEndpoint(req, res) {
+    const code_snippet = req.body;
+    try {
+      const aiResponse = await UnitTestsEndpoint(code_snippet);
+      console.log("Generated unit tests:", aiResponse);
+      res.status(200).send(aiResponse);
+    } catch (error) {
+      console.error("Error generating unit tests:", error);
+      res.status(500).send("Error generating unit tests");
     }
-    }
+  }
 }
 module.exports = VSCodeController;
-

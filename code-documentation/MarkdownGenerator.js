@@ -1,5 +1,6 @@
+const fs = require('fs').promises; // Use promise-based fs module
+const path = require('path');
 const DocumentGenerator = require('./DocumentGenerator');
-const fs = require('fs');
 
 class MarkdownGenerator extends DocumentGenerator {
     constructor() {
@@ -7,19 +8,21 @@ class MarkdownGenerator extends DocumentGenerator {
         this.doc = "";
     }
 
-    
     addMarkdownContent(markdown) {
         this.doc += markdown;
     }
 
-    async generate(document, filename){
-        fs.writeFile(filename, this.doc, (err) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            console.log("Markdown File has been created");
-        });
+    async generate(document, filename) {
+        try {
+            // Ensure directory exists
+            const directory = path.dirname(filename);
+            await fs.mkdir(directory, { recursive: true });
+
+            await fs.writeFile(filename, this.doc);
+            console.log("Markdown file has been created");
+        } catch (error) {
+            console.error("Error creating Markdown file:", error);
+        }
     }
 }
 
