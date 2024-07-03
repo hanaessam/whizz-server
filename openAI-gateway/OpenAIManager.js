@@ -30,7 +30,7 @@ async function processPrompt() {
             messages: [{ role: "system", content: prompt }],
         });
 
-        console.log("OpenAI API Response:", completion);
+        // console.log("OpenAI API Response:", completion);
 
         if (completion && completion.choices && completion.choices.length > 0) {
             const response = completion.choices[0].message.content;

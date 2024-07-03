@@ -1,6 +1,6 @@
 const { setPrompt, processPrompt } = require('../openAI-gateway/OpenAIManager');
 const DetectLanguagePromptGenerator = require('../chat-module/prompts/DetectLanguagePromptGenerator'); 
-const UnitTestsPromptGenerator = require('../chat-module/prompts/UnitTestsPromptGenerator'); 
+const UnitTestsPromptGenerator = require('../chat-module/prompts/UnitTestsGenerator'); 
 
 async function generateUnitTestsEndpoint(codeSnippet) {
     try {

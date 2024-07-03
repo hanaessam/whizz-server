@@ -46,7 +46,6 @@ app.get("/", (req, res) => {
 });
 
 
-
 // Mount the router on the '/vscode' path
 app.use("/vscode", vscodeRouter);
 app.use("/openai", openaiRouter);
@@ -68,7 +67,7 @@ const testConnection = async () => {
 
 const startServer = async () => {
   // //connect to database  
-  testConnection();
+ testConnection();
   await sequelize.authenticate();
   await sequelize.sync();
 
