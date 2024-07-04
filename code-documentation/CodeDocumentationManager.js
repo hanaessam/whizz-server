@@ -4,32 +4,35 @@ const DocxGenerator = require("../code-documentation/DocxGenerator");
 const MarkdownGenerator = require("../code-documentation/MarkdownGenerator");
 const Document = require("../code-documentation/Document");
 const DocumentGenerator = require("../code-documentation/DocumentGenerator");
-
+const fs = require("fs").promises;
 const path = require("path");
 
 class CodeDocumentationManager {
-  constructor() {
-    this.fieldManager = new DocumentFieldManager();
-    this.document = new Document();
-    this.documentGenerator = new DocumentGenerator();
-  }
+  constructor() {}
 
   async generateDocumentation(documentationDetails) {
-    const { fields, format, projectPath } = documentationDetails;
-    if (!fields || !format || !projectPath) {
+    this.document = new Document();
+    this.fieldManager = new DocumentFieldManager();
+    this.documentGenerator = new DocumentGenerator();
+
+    const { fields, format, projectPath, projectSummary } =
+      documentationDetails;
+    if (!fields || !format || !projectPath || !projectSummary) {
       return res.status(400).send("Fields and format are required");
     }
-    
-    fields.forEach((field) => {this.fieldManager.addField(field);});
 
-    
+    fields.forEach((field) => {
+      this.fieldManager.addField(field);
+    });
 
     try {
-        for (const field of this.fieldManager.getFields()) {
-            const content = await this.documentGenerator.generateContent(projectPath, [field]);
-            this.document.setContent(field, content);
-          }
-      
+      const fields = this.fieldManager.getFields();
+      const content = await this.documentGenerator.generateContent(
+        projectPath,
+        fields,
+        projectSummary
+      );
+      this.document.setContent(fields, content);
 
       const filename = path.join(
         projectPath,
@@ -40,19 +43,14 @@ class CodeDocumentationManager {
 
       if (format === "pdf") {
         const pdfGenerator = new PDFGenerator();
-        for (const [field, content] of Object.entries(this.document.getContent())) {
-          pdfGenerator.addMarkdownContent(content);
-        }
-
+        pdfGenerator.addMarkdownContent(content);
         await pdfGenerator.generate(this.document, filename);
         return {
           message: `PDF documentation generated successfully at ${filename}`,
         };
       } else if (format === "docx") {
         const docxGenerator = new DocxGenerator();
-        for (const [field, content] of Object.entries(this.document.getContent())) {
-          docxGenerator.addMarkdownContent(content);
-        }
+        docxGenerator.addMarkdownContent(content);
         await docxGenerator.generate(this.document, filename);
 
         return {
@@ -60,9 +58,7 @@ class CodeDocumentationManager {
         };
       } else if (format === "md") {
         const markdownGenerator = new MarkdownGenerator();
-        for (const [field, content] of Object.entries(this.document.getContent())) {
-          markdownGenerator.addMarkdownContent(content);
-        }
+        markdownGenerator.addMarkdownContent(content);
         await markdownGenerator.generate(this.document, filename);
         return {
           message: `Markdown documentation generated successfully at ${filename}`,

@@ -1,5 +1,5 @@
 
-function extractCodeInLanguage( code) {
+function extractCodeInLanguage(code) {
     const lines = code.split('\n');
 
     // Define a regex pattern to match lines starting with !, @, `, %, ^, or *
