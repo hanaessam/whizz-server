@@ -4,7 +4,7 @@ const DocxGenerator = require("../code-documentation/DocxGenerator");
 const MarkdownGenerator = require("../code-documentation/MarkdownGenerator");
 const Document = require("../code-documentation/Document");
 const DocumentGenerator = require("../code-documentation/DocumentGenerator");
-const fs = require("fs").promises;
+const fs = require("fs");
 const path = require("path");
 
 class CodeDocumentationManager {
@@ -18,7 +18,9 @@ class CodeDocumentationManager {
     const { fields, format, projectPath, projectSummary } =
       documentationDetails;
     if (!fields || !format || !projectPath || !projectSummary) {
-      return res.status(400).send("Fields and format are required");
+      throw new Error(
+        "Fields, format, projectPath, and projectSummary are required"
+      );
     }
 
     fields.forEach((field) => {
@@ -33,36 +35,31 @@ class CodeDocumentationManager {
         projectSummary
       );
       this.document.setContent(fields, content);
+      const dirPath = projectPath;
+      console.log("dirPath", dirPath);
+      // ensure the directory exists
+      if(!fs.existsSync(dirPath)) {
+        await fs.promises.mkdir(dirPath, { recursive: true });
+      }
 
-      const filename = path.join(
-        projectPath,
-        `documentation.${
-          format === "pdf" ? "pdf" : format === "docx" ? "docx" : "md"
-        }`
-      );
+      const filePath = path.join(dirPath, `documentation.${format}`);
 
+      let generatedContent;
       if (format === "pdf") {
         const pdfGenerator = new PDFGenerator();
-        pdfGenerator.addMarkdownContent(content);
-        await pdfGenerator.generate(this.document, filename);
-        return {
-          message: `PDF documentation generated successfully at ${filename}`,
-        };
+        generatedContent = await pdfGenerator.generate(this.document, filePath);
+        return { message: "PDF documentation generated successfully." };
       } else if (format === "docx") {
         const docxGenerator = new DocxGenerator();
-        docxGenerator.addMarkdownContent(content);
-        await docxGenerator.generate(this.document, filename);
-
-        return {
-          message: `DOCX documentation generated successfully at ${filename}`,
-        };
+        generatedContent = await docxGenerator.generate(
+          this.document,
+          filePath
+        );
+        return { message: "Docx documentation generated successfully." };
       } else if (format === "md") {
         const markdownGenerator = new MarkdownGenerator();
-        markdownGenerator.addMarkdownContent(content);
-        await markdownGenerator.generate(this.document, filename);
-        return {
-          message: `Markdown documentation generated successfully at ${filename}`,
-        };
+        generatedContent = markdownGenerator.generate(this.document, filePath);
+        return { message: "Markdown documentation generated successfully." };
       }
     } catch (error) {
       console.error("Error generating documentation:", error);
