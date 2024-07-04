@@ -30,11 +30,12 @@ class VSCodeController {
 
   async generateProjectStructure(req, res) {
     const projectDetails = req.body;
+    const userId = req.body;
     console.log("Project details received:", projectDetails);
 
     try {
       const projectStructure =
-        await this.projectFileManager.generateProjectStructure(projectDetails);
+        await this.projectFileManager.generateProjectStructure(projectDetails, userId);
       res.status(200).send(projectStructure);
     } catch (error) {
       console.error("Error generating project structure:", error);
@@ -58,12 +59,13 @@ class VSCodeController {
     }
   }
   async SwitchCodeLanguage(req, res) {
-    const { fromLanguage, toLanguage, codeSnippet } = req.body;
+    const { fromLanguage, toLanguage, codeSnippet, userId } = req.body;
     try {
       const code = await switchCodeLanguage(
         fromLanguage,
         toLanguage,
-        codeSnippet
+        codeSnippet,
+        userId
       );
       console.log("from controller", code);
       res.status(200).send(code);
@@ -74,8 +76,9 @@ class VSCodeController {
   }
   async UnitTestsEndpoint(req, res) {
     const code_snippet = req.body;
+    const userId = req.body;
     try {
-      const aiResponse = await UnitTestsEndpoint(code_snippet);
+      const aiResponse = await UnitTestsEndpoint(code_snippet, userId);
       console.log("Generated unit tests:", aiResponse);
       res.status(200).send(aiResponse);
     } catch (error) {

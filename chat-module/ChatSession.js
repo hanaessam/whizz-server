@@ -6,51 +6,54 @@ const FixPromptGenerator = require('./prompts/FixPromptGenerator');
 const Message = require('./Message');
 const ResponseParser = require('./ResponseParser');
 const extractCodeInLanguage = require('../parsers/switchCodeParser')
+const { setPrompt, processPrompt } = require('../openAI-gateway/OpenAIManager');
 
 class ChatSession {
     constructor() {
         this.currentMsg = new Message();
     }
 
-    generatorFactory() {
-        console.log(this.originalPrompt.body.type);
+    generatorFactory(type) {
 
-        if (this.originalPrompt.body.type === "explain") {
+        if (type === "explain") {
             return new ExplainPromptGenerator();
-        } else if (this.originalPrompt.body.type === "fix") {
+        } else if (type === "fix") {
             return new FixPromptGenerator();
-        } else if (this.originalPrompt.body.type === "general") {
+        } else if (type === "general") {
             return new GeneralPromptGenerator();
         }
     }
 
+    // i am fixing this
     async processPrompt() {
-        const apiUrl = 'http://localhost:8888/openai/processPrompt';
-        console.log("sending this to gpt: " + this.currentPrompt);
-        const promptData = { prompt: this.currentPrompt };
+
+        const promptData = { prompt: this.currentPrompt, userId: this.userId };
 
         try {
-            const response = await axios.post(apiUrl, promptData);
-            console.log(response.data);
-            this.currentResponse = response.data;
-            return response.data;
+            // OpenAIManager.setKey(promptData.userId);
+            setPrompt(promptData.prompt);
+            console.log("process prompt with userid: ", promptData.userId)
+            const response = await processPrompt(promptData.userId);
+            console.log("DONE", response);
+            this.currentResponse = response;
+            return response;
         } catch (error) {
             console.error('Error fetching data from vscode API:', error);
             throw error;
         }
     }
 
-    async processInput(request) {
+    async processInput(req) {
         console.log('here we are in chat session generating prompt');
-        this.originalPrompt = request;
 
-        this.promptGenerator = this.generatorFactory();
-        this.promptGenerator.setCodeSnippet(this.originalPrompt.body.codesnippet);
-        this.promptGenerator.setPrompt(this.originalPrompt.body.prompt);
-        this.promptGenerator.setSummary(this.originalPrompt.body.summary);
-        this.currentPrompt = this.promptGenerator.generatePrompt(this.originalPrompt);
+        this.promptGenerator = this.generatorFactory(req.body.type);
+        this.promptGenerator.setCodeSnippet(req.body.codesnippet);
+        this.promptGenerator.setPrompt(req.body.prompt);
+        this.promptGenerator.setSummary(req.body.summary);
+        this.currentPrompt = this.promptGenerator.generatePrompt();
+        this.userId = req.body.userId;
         console.log('here we are in chat session processing input');
-        console.log(this.currentPrompt);
+        console.log(this.req);
         try {
             this.currentResponse = await this.processPrompt();
             const parser = new ResponseParser(this.currentResponse);

@@ -1,8 +1,8 @@
 const { setPrompt, processPrompt } = require('../openAI-gateway/OpenAIManager');
-const DetectLanguagePromptGenerator = require('../chat-module/prompts/DetectLanguagePromptGenerator'); 
-const UnitTestsPromptGenerator = require('../chat-module/prompts/UnitTestsGenerator'); 
+const DetectLanguagePromptGenerator = require('../chat-module/prompts/DetectLanguagePromptGenerator');
+const UnitTestsPromptGenerator = require('../chat-module/prompts/UnitTestsGenerator');
 
-async function generateUnitTestsEndpoint(codeSnippet) {
+async function generateUnitTestsEndpoint(codeSnippet, userId) {
     try {
         // Determine the programming language of the code snippet
         const languageDetector = new DetectLanguagePromptGenerator();
@@ -17,7 +17,7 @@ async function generateUnitTestsEndpoint(codeSnippet) {
         setPrompt(prompt);
 
         // Process the prompt to get a response from OpenAI
-        const aiResponse = await processPrompt();
+        const aiResponse = await processPrompt(userId);
         console.log("AI Response:", aiResponse);
         return aiResponse;
     } catch (error) {

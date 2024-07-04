@@ -10,11 +10,11 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ error: 'You must provide either email and password or a GitHub token.' });
     }
 
-    const openAiKey = OPENAI_API_KEY;
+    const openAiKey = process.env.OPENAI_API_KEY;
     const openAiKeyExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    
+
     // Create a new user
-    const newUser = await User.create({ username, email, password, githubToken, openAiKey, openAiKeyExpiry});
+    const newUser = await User.create({ username, email, password, githubToken, openAiKey, openAiKeyExpiry });
     // Return a sanitized response (exclude password)
     const sanitizedUser = {
       id: newUser.id,
@@ -42,6 +42,7 @@ exports.getAllUsers = async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
+      openAiKey: user.openAiKey,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     }));
@@ -120,24 +121,21 @@ const foreverDate = new Date('9999-12-31T23:59:59.999Z');
 
 exports.addOpenAiKey = async (req, res) => {
   try {
-    const { trial, openAiKey } = req.body;
+    const { openAiKey } = req.body;
     const userId = req.params.id; // Get user ID from URL
     const user = await User.findByPk(userId);
-    
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
     let updateData = {};
-    if (trial) {
-      updateData.openAiKey = OPENAI_API_KEY;
-      updateData.openAiKeyExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    } else {
-      updateData.openAiKey = openAiKey;
-      updateData.openAiKeyExpiry = foreverDate; 
-    }
 
-    await user.update(updateData);
+    user.openAiKey = openAiKey;
+    user.openAiKeyExpiry = foreverDate;
+
+
+    await user.save();
 
     res.status(200).json({ message: 'OpenAI key added successfully' });
   } catch (error) {

@@ -3,9 +3,9 @@ const FileArchPromptGenerator = require('../chat-module/prompts/FileArchPromptGe
 const ResponseParser = require('../chat-module/ResponseParser');
 
 class ProjectFileManager {
-  constructor() {}
+  constructor() { }
 
-  async generateProjectStructure(projectDetails) {
+  async generateProjectStructure(projectDetails, userId) {
     const { projectName, projectDescription, projectFramework } = projectDetails;
 
 
@@ -19,10 +19,10 @@ class ProjectFileManager {
     setPrompt(prompt);
 
     try {
-      const aiResponse = await processPrompt();
+      const aiResponse = await processPrompt(userId);
       console.log("AI Response:", aiResponse);
 
-     
+
       const parser = new ResponseParser(aiResponse);
       const projectStructure = parser.parseFileArch();
 

@@ -2,7 +2,7 @@ const { setPrompt, processPrompt } = require('../openAI-gateway/OpenAIManager');
 const SwitchCodeLanguagePromptGenerator = require('../chat-module/prompts/SwitchLangPromptGenerator');
 const extractCodeInLanguage = require('../parsers/switchCodeParser');
 
-async function switchCodeLanguage(fromLanguage, toLanguage, code) {
+async function switchCodeLanguage(fromLanguage, toLanguage, code, userId) {
 
     // Generate the prompt
     const promptGenerator = new SwitchCodeLanguagePromptGenerator();
@@ -17,7 +17,7 @@ async function switchCodeLanguage(fromLanguage, toLanguage, code) {
 
     try {
         // Process the prompt to get a response from OpenAI
-        const aiResponse = await processPrompt();
+        const aiResponse = await processPrompt(userId);
         const parsedCode = extractCodeInLanguage(aiResponse);
         console.log("AI Response:", parsedCode);
         return parsedCode;
