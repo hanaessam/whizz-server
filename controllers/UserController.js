@@ -120,7 +120,8 @@ const foreverDate = new Date('9999-12-31T23:59:59.999Z');
 
 exports.addOpenAiKey = async (req, res) => {
   try {
-    const { trial, openAiKey, userId } = req.body;
+    const { trial, openAiKey } = req.body;
+    const userId = req.params.id; // Get user ID from URL
     const user = await User.findByPk(userId);
     
     if (!user) {
@@ -146,16 +147,39 @@ exports.addOpenAiKey = async (req, res) => {
 
 exports.removeOpenAiKey = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id);
+    const userId = req.params.id; // Get user ID from URL
+    const user = await User.findByPk(userId);
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
+
     await user.update({
       openAiKey: null,
       openAiKeyExpiry: null
     });
+
     res.status(200).json({ message: 'OpenAI key removed successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getOpenAiKey = async (req, res) => {
+  try {
+    const userId = req.params.id; // Get user ID from URL
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (!user.openAiKey || user.openAiKeyExpiry < new Date()) {
+      return res.status(404).json({ error: 'OpenAI key not found' });
+    }
+
+    res.status(200).json({ key: user.openAiKey });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
