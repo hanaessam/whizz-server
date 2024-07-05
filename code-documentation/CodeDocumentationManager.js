@@ -5,7 +5,7 @@ const { setPrompt, processPrompt } = require("../openAI-gateway/OpenAIManager");
 class CodeDocumentationManager {
   constructor() { }
 
-  async generateDocumentation(documentationDetails) {
+  async generateDocumentation(documentationDetails, userId) {
     const { fields, format, projectPath, projectSummary } =
       documentationDetails;
     if (!fields || !format || !projectPath || !projectSummary) {
@@ -22,7 +22,7 @@ class CodeDocumentationManager {
     setPrompt(prompt);
 
     try {
-      const response = await processPrompt();
+      const response = await processPrompt(userId);
       return response;
     } catch (error) {
       throw new Error(

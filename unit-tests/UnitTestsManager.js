@@ -4,8 +4,8 @@ const UnitTestsPromptGenerator = require("../chat-module/prompts/UnitTestsPrompt
 const ResponseParser = require("../chat-module/ResponseParser");
 
 class UnitTestsManager {
-  constructor() {}
-  async generateUnitTests(codeSnippet) {
+  constructor() { }
+  async generateUnitTests(codeSnippet, userId) {
     try {
       // Determine the programming language of the code snippet
       const languageDetector = new DetectLanguagePromptGenerator();
@@ -19,7 +19,7 @@ class UnitTestsManager {
       const prompt = unitTestsGenerator.generatePrompt(detectedLanguage);
       setPrompt(prompt);
 
-      const aiResponse = await processPrompt();
+      const aiResponse = await processPrompt(userId);
       console.log("AI Response:", aiResponse);
       const parsedResponse = new ResponseParser(aiResponse);
       const unitTests = parsedResponse.parseUnitTests();
