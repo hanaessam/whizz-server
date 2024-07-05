@@ -1,72 +1,33 @@
-const DocumentFieldManager = require("../code-documentation/DocumentFieldManager");
-const PDFGenerator = require("../code-documentation/PDFGenerator");
-const DocxGenerator = require("../code-documentation/DocxGenerator");
-const MarkdownGenerator = require("../code-documentation/MarkdownGenerator");
-const Document = require("../code-documentation/Document");
-const DocumentGenerator = require("../code-documentation/DocumentGenerator");
-const fs = require("fs").promises;
-const path = require("path");
+
+const CodeDocPromptGenerator = require("../chat-module/prompts/CodeDocPromptGenerator");
+const { setPrompt, processPrompt } = require("../openAI-gateway/OpenAIManager");
 
 class CodeDocumentationManager {
   constructor() { }
 
-  async generateDocumentation(documentationDetails, userId) {
-    this.document = new Document();
-    this.fieldManager = new DocumentFieldManager();
-    this.documentGenerator = new DocumentGenerator();
-
+  async generateDocumentation(documentationDetails) {
     const { fields, format, projectPath, projectSummary } =
       documentationDetails;
     if (!fields || !format || !projectPath || !projectSummary) {
-      return res.status(400).send("Fields and format are required");
+      throw new Error(
+        "Fields, format, projectPath, and projectSummary are required"
+      );
     }
+    const promptGenerator = new CodeDocPromptGenerator();
+    promptGenerator.setProjectPath(projectPath);
+    promptGenerator.setDocumentationFields(fields);
+    promptGenerator.setProjectSummary(projectSummary);
+    const prompt = promptGenerator.generatePrompt();
 
-    fields.forEach((field) => {
-      this.fieldManager.addField(field);
-    });
+    setPrompt(prompt);
 
     try {
-      const fields = this.fieldManager.getFields();
-      const content = await this.documentGenerator.generateContent(
-        projectPath,
-        fields,
-        projectSummary,
-        userId
-      );
-      this.document.setContent(fields, content);
-
-      const filename = path.join(
-        projectPath,
-        `documentation.${format === "pdf" ? "pdf" : format === "docx" ? "docx" : "md"
-        }`
-      );
-
-      if (format === "pdf") {
-        const pdfGenerator = new PDFGenerator();
-        pdfGenerator.addMarkdownContent(content);
-        await pdfGenerator.generate(this.document, filename);
-        return {
-          message: `PDF documentation generated successfully at ${filename}`,
-        };
-      } else if (format === "docx") {
-        const docxGenerator = new DocxGenerator();
-        docxGenerator.addMarkdownContent(content);
-        await docxGenerator.generate(this.document, filename);
-
-        return {
-          message: `DOCX documentation generated successfully at ${filename}`,
-        };
-      } else if (format === "md") {
-        const markdownGenerator = new MarkdownGenerator();
-        markdownGenerator.addMarkdownContent(content);
-        await markdownGenerator.generate(this.document, filename);
-        return {
-          message: `Markdown documentation generated successfully at ${filename}`,
-        };
-      }
+      const response = await processPrompt();
+      return response;
     } catch (error) {
-      console.error("Error generating documentation:", error);
-      throw new Error("Error generating documentation");
+      throw new Error(
+        "Failed to generate documentation content: " + error.message
+      );
     }
   }
 }

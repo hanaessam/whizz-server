@@ -1,5 +1,5 @@
 const PromptGenerator = require("./PromptGenerator");
-class detectLanGenerator extends PromptGenerator {
+class DetectLanguagePromptGenerator extends PromptGenerator {
   constructor() {
     super();
   }
@@ -24,4 +24,4 @@ class detectLanGenerator extends PromptGenerator {
     return this.prompt;
   }
 }
-module.exports = detectLanGenerator;
+module.exports = DetectLanguagePromptGenerator;

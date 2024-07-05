@@ -1,29 +1,40 @@
 const { setPrompt, processPrompt } = require('../openAI-gateway/OpenAIManager');
 const SwitchCodeLanguagePromptGenerator = require('../chat-module/prompts/SwitchLangPromptGenerator');
-const extractCodeInLanguage = require('../parsers/switchCodeParser');
+const ResponseParser = require('../chat-module/ResponseParser');
 
-async function switchCodeLanguage(fromLanguage, toLanguage, code, userId) {
 
-    // Generate the prompt
-    const promptGenerator = new SwitchCodeLanguagePromptGenerator();
-    promptGenerator.setFromLanguage(fromLanguage);
+class SwitchCodeLanguageManager {
+    constructor() { }
 
-    promptGenerator.setCodeSnippet(code);
+    async switchCodeLanguage(fromLanguage, toLanguage, code, userId) {
 
-    promptGenerator.setToLanguage(toLanguage);
+        // Generate the prompt
+        const promptGenerator = new SwitchCodeLanguagePromptGenerator();
+        promptGenerator.setFromLanguage(fromLanguage);
 
-    const prompt = promptGenerator.generatePrompt();
-    setPrompt(prompt);
+        promptGenerator.setCodeSnippet(code);
 
-    try {
-        // Process the prompt to get a response from OpenAI
-        const aiResponse = await processPrompt(userId);
-        const parsedCode = extractCodeInLanguage(aiResponse);
-        console.log("AI Response:", parsedCode);
-        return parsedCode;
-    } catch (error) {
-        console.error("Error switching language:", error);
+        promptGenerator.setToLanguage(toLanguage);
+
+        const prompt = promptGenerator.generatePrompt();
+
+
+        setPrompt(prompt);
+
+        try {
+            // Process the prompt to get a response from OpenAI
+            const aiResponse = await processPrompt(userId);
+            const parsedResponse = new ResponseParser(aiResponse);
+            const switchCodeLanguageResponse = parsedResponse.parseSwitchCodeLanguage();
+            return switchCodeLanguageResponse;
+        } catch (error) {
+            console.error("Error switching language:", error);
+        }
     }
+
 }
 
-module.exports = switchCodeLanguage;
+
+
+
+module.exports = SwitchCodeLanguageManager;

@@ -8,6 +8,11 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - ./local/pdfs:/user/src/app/pdfs
+      - ./local/docxs:/user/src/app/docxs
+      - ./local/mds:/user/src/app/mds
+
 
   db:
     image: 'postgres'

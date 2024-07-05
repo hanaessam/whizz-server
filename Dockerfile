@@ -4,6 +4,11 @@ FROM node
 # Set the working directory in the container
 WORKDIR /user/src/app
 
+ENV PDF_SAVE_PATH=/user/src/app/pdfs
+ENV DOCX_SAVE_PATH=/user/src/app/docxs
+ENV MD_SAVE_PATH=/user/src/app/mds
+
+
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
