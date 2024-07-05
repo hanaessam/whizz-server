@@ -9,6 +9,7 @@ const projectRoutes = require('./routes/projectRoutes.js');
 const passport = require("./auth/githubAuth");
 const gihtubAuthRoutes = require('./routes/githubAuthRoutes.js');
 const localAuthRoutes = require('./routes/localAuthRoutes.js');
+const keyRoutes = require('./routes/keyRoutes.js')
 // const summaryRoutes = require('./routes/summaryRoutes.js');
 const session = require("express-session");
 const cors = require("cors");
@@ -54,6 +55,7 @@ app.use("", userRoutes);
 app.use("", projectRoutes);
 app.use(gihtubAuthRoutes);
 app.use(localAuthRoutes);
+app.use(keyRoutes);
 
 
 const testConnection = async () => {
