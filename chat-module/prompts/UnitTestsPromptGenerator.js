@@ -1,5 +1,5 @@
 const PromptGenerator = require('./PromptGenerator');
-class UnitTestsGenerator extends PromptGenerator {
+class UnitTestsPromptGenerator extends PromptGenerator {
     constructor() {
         super();
     }
@@ -26,6 +26,15 @@ class UnitTestsGenerator extends PromptGenerator {
             - Include tests for incorrect input types to ensure the function handles errors properly.
 
             Provide the complete code for the unit tests.
+
+            Provide the response in JSON format with the following structure:
+            {
+                "message": "Unit tests for Python code",
+                "language": "python",
+                "code": "<unit test code>"
+            }
+                make sure the code block is JSON parsable
+            
             `;
         } else if (language.toLowerCase() === 'java') {
             prompt = `
@@ -40,7 +49,15 @@ class UnitTestsGenerator extends PromptGenerator {
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Ensure the tests are well-structured and include assertions to verify the expected outcomes.
             - Provide the complete code for the unit tests, including necessary imports.
-            `;
+            Provide the response in JSON format with the following structure:
+            {
+                "message": "Unit tests for Java code",
+                "language": "java",
+                "code": "<unit test code>"
+            }
+            make sure the code block is JSON parsable
+            `
+            ;
         } else if (language.toLowerCase() === 'c++') {
             prompt = `
             You are an expert in writing unit tests for C++ code. Your task is to generate a comprehensive set of unit tests for the following function. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -55,6 +72,14 @@ class UnitTestsGenerator extends PromptGenerator {
             - Include tests for invalid inputs to ensure the function handles errors properly.
     
             Provide the complete code for the unit tests.
+            Provide the response in JSON format with the following structure:
+            {
+                "message": "Unit tests for C++ code",
+                "language": "c++",
+                "code": "<unit test code>"
+            }
+                make sure the code block is JSON parsable
+
             `;
         } else if (language.toLowerCase() === 'c') {
             prompt = `
@@ -70,6 +95,14 @@ class UnitTestsGenerator extends PromptGenerator {
             - Include tests for invalid inputs to ensure the function handles errors properly.
     
             Provide the complete code for the unit tests.
+
+            Provide the response in JSON format with the following structure:
+            {
+                "message": "Unit tests for C code",
+                "language": "c",
+                "code": "<unit test code>"
+            }
+                make sure the code block is JSON parsable
             `;
         } else if (language.toLowerCase() === 'javascript') {
             prompt = `
@@ -85,7 +118,12 @@ class UnitTestsGenerator extends PromptGenerator {
             - Include tests for incorrect input types to ensure the function handles errors properly.
             
             Provide the complete code for the unit tests.
-            
+             {
+                "message": "Unit tests for code",
+                "language": "JavaScript",
+                "code": "<unit test code>"
+            }
+                make sure the code block is JSON parsable
             `;
         } else if (language.toLowerCase() === 'go') {
             prompt = `
@@ -101,6 +139,14 @@ class UnitTestsGenerator extends PromptGenerator {
             - Include tests for invalid inputs to ensure the function handles errors properly.
     
             Provide the complete code for the unit tests.
+
+            Provide the response in JSON format with the following structure:
+            {
+                "message": "Unit tests for Go code",
+                "language": "go",
+                "code": "<unit test code>"
+            }
+                make sure the code block is JSON parsable
             `;
         } else {
             prompt = `
@@ -113,6 +159,14 @@ class UnitTestsGenerator extends PromptGenerator {
             Requirements:
             - Ensure the tests are well-structured and include assertions to verify the expected outcomes.
             - Provide the complete code for the unit tests.
+
+            Provide the response in JSON format with the following structure:
+            {
+                "message": "Unit tests for code",
+                "language": "${language}",
+                "code": "<unit test code>"
+            }
+                make sure the code block is JSON parsable
             `;
         }
 
@@ -120,4 +174,4 @@ class UnitTestsGenerator extends PromptGenerator {
         return this.prompt;
     }
 }
-module.exports = UnitTestsGenerator;
+module.exports = UnitTestsPromptGenerator;

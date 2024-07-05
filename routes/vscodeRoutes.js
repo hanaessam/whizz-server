@@ -8,7 +8,7 @@ vscodeRouter.post('/project-path', vscodeController.getProjectPath.bind(vscodeCo
 vscodeRouter.post('/generate-project', vscodeController.generateProjectStructure.bind(vscodeController));
 vscodeRouter.post('/generate-documentation', vscodeController.generateDocumentation.bind(vscodeController));
 
-vscodeRouter.post('/switch-code-language', vscodeController.SwitchCodeLanguage.bind(vscodeController) );
-vscodeRouter.post('/unit_tests', vscodeController.UnitTestsEndpoint.bind(vscodeController) );
+vscodeRouter.post('/switch-code-language', vscodeController.switchCodeLanguage.bind(vscodeController) );
+vscodeRouter.post('/unit-tests', vscodeController.generateUnitTests.bind(vscodeController) );
 
 module.exports = vscodeRouter;
