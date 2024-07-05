@@ -2,9 +2,9 @@ const { setPrompt, processPrompt } = require("../openAI-gateway/OpenAIManager");
 const CodeDocPromptGenerator = require("../chat-module/prompts/CodeDocPromptGenerator");
 
 class DocumentGenerator {
-  constructor() {}
+  constructor() { }
 
-  async generateContent(projectPath, fields, projectSummary) {
+  async generateContent(projectPath, fields, projectSummary, userId) {
     const promptGenerator = new CodeDocPromptGenerator();
     promptGenerator.setProjectPath(projectPath);
     promptGenerator.setDocumentationFields(fields);
@@ -14,7 +14,7 @@ class DocumentGenerator {
     setPrompt(prompt);
 
     try {
-      const response = await processPrompt();
+      const response = await processPrompt(userId);
       return response;
     } catch (error) {
       throw new Error(

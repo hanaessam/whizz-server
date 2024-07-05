@@ -8,9 +8,9 @@ const fs = require("fs").promises;
 const path = require("path");
 
 class CodeDocumentationManager {
-  constructor() {}
+  constructor() { }
 
-  async generateDocumentation(documentationDetails) {
+  async generateDocumentation(documentationDetails, userId) {
     this.document = new Document();
     this.fieldManager = new DocumentFieldManager();
     this.documentGenerator = new DocumentGenerator();
@@ -30,14 +30,14 @@ class CodeDocumentationManager {
       const content = await this.documentGenerator.generateContent(
         projectPath,
         fields,
-        projectSummary
+        projectSummary,
+        userId
       );
       this.document.setContent(fields, content);
 
       const filename = path.join(
         projectPath,
-        `documentation.${
-          format === "pdf" ? "pdf" : format === "docx" ? "docx" : "md"
+        `documentation.${format === "pdf" ? "pdf" : format === "docx" ? "docx" : "md"
         }`
       );
 

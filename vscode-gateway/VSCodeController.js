@@ -29,8 +29,7 @@ class VSCodeController {
   }
 
   async generateProjectStructure(req, res) {
-    const projectDetails = req.body;
-    const userId = req.body;
+    const { projectDetails, userId } = req.body;
     console.log("Project details received:", projectDetails);
 
     try {
@@ -45,12 +44,13 @@ class VSCodeController {
 
   async generateDocumentation(req, res) {
     this.codeDocumentationManager = new CodeDocumentationManager();
-    const documentationDetails = req.body;
+    const { documentationDetails, userId } = req.body;
     console.log("Documentation details received:", documentationDetails);
     try {
       const response =
         await this.codeDocumentationManager.generateDocumentation(
-          documentationDetails
+          documentationDetails,
+          userId
         );
       res.status(200).send(response);
     } catch (error) {
@@ -75,8 +75,8 @@ class VSCodeController {
     }
   }
   async UnitTestsEndpoint(req, res) {
-    const code_snippet = req.body;
-    const userId = req.body;
+    const { code_snippet, userId } = req.body;
+
     try {
       const aiResponse = await UnitTestsEndpoint(code_snippet, userId);
       console.log("Generated unit tests:", aiResponse);
