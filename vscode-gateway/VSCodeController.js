@@ -81,7 +81,7 @@ class VSCodeController {
     const { codeSnippet, userId } = req.body;
 
     try {
-      const aiResponse = await unitTestsManager.generateUnitTests(codeSnippet);
+      const aiResponse = await unitTestsManager.generateUnitTests(codeSnippet, userId);
       console.log("Generated unit tests:", aiResponse);
       res.status(200).send(aiResponse);
     } catch (error) {
