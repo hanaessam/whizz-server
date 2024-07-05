@@ -67,9 +67,9 @@ const testConnection = async () => {
 
 const startServer = async () => {
   // //connect to database  
- testConnection();
-  await sequelize.authenticate();
-  await sequelize.sync();
+ //testConnection();
+  // await sequelize.authenticate();
+  // await sequelize.sync();
 
   // start server
   app.listen(port, () => {
