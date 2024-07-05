@@ -2,7 +2,6 @@ const { setPrompt, processPrompt } = require("../openAI-gateway/OpenAIManager");
 const DetectLanguagePromptGenerator = require("../chat-module/prompts/DetectLanguagePromptGenerator");
 const UnitTestsPromptGenerator = require("../chat-module/prompts/UnitTestsPromptGenerator");
 const ResponseParser = require("../chat-module/ResponseParser");
-
 class UnitTestsManager {
   constructor() {}
   async generateUnitTests(codeSnippet) {
@@ -18,9 +17,8 @@ class UnitTestsManager {
       unitTestsGenerator.setCodeSnippet(codeSnippet);
       const prompt = unitTestsGenerator.generatePrompt(detectedLanguage);
       setPrompt(prompt);
-
       const aiResponse = await processPrompt();
-      console.log("AI Response:", aiResponse);
+
       const parsedResponse = new ResponseParser(aiResponse);
       const unitTests = parsedResponse.parseUnitTests();
       return unitTests;
