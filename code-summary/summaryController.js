@@ -2,7 +2,7 @@ const summarizeContent = require('./summarize');
 
 async function handleSummaryRequest(req, res) {
     const filesData = req.body;
-
+    const userId = req.body;
     if (!Array.isArray(filesData)) {
         return res.status(400).send('Invalid data format');
     }

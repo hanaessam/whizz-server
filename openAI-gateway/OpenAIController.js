@@ -1,4 +1,4 @@
-const { setPrompt, processPrompt} = require('./OpenAIManager');
+const { setPrompt, processPrompt } = require('./OpenAIManager');
 
 const OpenAIController = {
     async processPrompt(req, res) {
@@ -9,7 +9,7 @@ const OpenAIController = {
 
 
         try {
-            const response = await processPrompt();
+            const response = await processPrompt(req.body.useId);
             console.log(response);
             res.status(200).send(response);
         } catch (error) {
