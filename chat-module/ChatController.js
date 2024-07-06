@@ -1,7 +1,6 @@
 const axios = require('axios');
 const VSCodeController = require('../vscode-gateway/VSCodeController');
 const ChatSession = require('./ChatSession');
-const { setPrompt } = require('../openAI-gateway/OpenAIManager');
 class ChatController {
     constructor() {
         this.vscodeController = new VSCodeController();

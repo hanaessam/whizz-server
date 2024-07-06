@@ -58,7 +58,7 @@ async function processPrompt(userId) {
             console.log(gptresponse);
             return gptresponse;
         } else {
-            throw new Error("Unexpected response structure from OpenAI API");
+            throw new Error("Invalid or Expired OpenAI Key");
         }
     } catch (error) {
         console.error("Error processing prompt:", error);
