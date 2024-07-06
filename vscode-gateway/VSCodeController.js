@@ -2,8 +2,8 @@ const ProjectFileManager = require("../file-architecture/ProjectFileManager");
 
 const CodeDocumentationManager = require("../code-documentation/CodeDocumentationManager");
 const path = require("path");
-const switchCodeLanguage = require("../switch-code-language/SwitchCodeLanguageManager");
-const UnitTestsEndpoint = require("../unit_tests/UnitTestsEndpoint");
+const SwitchCodeLanguageManager = require("../switch-code-language/SwitchCodeLanguageManager");
+const UnitTestsManager = require("../unit-tests/UnitTestsManager");
 
 class VSCodeController {
   constructor() {
@@ -29,8 +29,7 @@ class VSCodeController {
   }
 
   async generateProjectStructure(req, res) {
-    const projectDetails = req.body;
-    const userId = req.body;
+    const { projectDetails, userId } = req.body;
     console.log("Project details received:", projectDetails);
 
     try {
@@ -45,12 +44,13 @@ class VSCodeController {
 
   async generateDocumentation(req, res) {
     this.codeDocumentationManager = new CodeDocumentationManager();
-    const documentationDetails = req.body;
+    const { documentationDetails, userId } = req.body;
     console.log("Documentation details received:", documentationDetails);
     try {
       const response =
         await this.codeDocumentationManager.generateDocumentation(
-          documentationDetails
+          documentationDetails,
+          userId
         );
       res.status(200).send(response);
     } catch (error) {
@@ -58,10 +58,12 @@ class VSCodeController {
       res.status(500).send("Error generating documentation");
     }
   }
-  async SwitchCodeLanguage(req, res) {
+
+  async switchCodeLanguage(req, res) {
     const { fromLanguage, toLanguage, codeSnippet, userId } = req.body;
+    const switchCodeLanguageManager = new SwitchCodeLanguageManager();
     try {
-      const code = await switchCodeLanguage(
+      const code = await switchCodeLanguageManager.switchCodeLanguage(
         fromLanguage,
         toLanguage,
         codeSnippet,
@@ -74,11 +76,12 @@ class VSCodeController {
       res.status(500).send("Error switching code language");
     }
   }
-  async UnitTestsEndpoint(req, res) {
-    const code_snippet = req.body;
-    const userId = req.body;
+  async generateUnitTests(req, res) {
+    const unitTestsManager = new UnitTestsManager();
+    const { codeSnippet, userId } = req.body;
+
     try {
-      const aiResponse = await UnitTestsEndpoint(code_snippet, userId);
+      const aiResponse = await unitTestsManager.generateUnitTests(codeSnippet);
       console.log("Generated unit tests:", aiResponse);
       res.status(200).send(aiResponse);
     } catch (error) {
