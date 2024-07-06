@@ -25,17 +25,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Include tests for incorrect input types to ensure the function handles errors properly.
 
-            Provide the complete code for the unit tests.
-
-            Provide the response in JSON format with the following structure:
-            {
-                "message": "Unit tests for Python code",
-                "language": "python",
-                "code": "<unit test code>"
-            }
-                make sure the code block is JSON parsable
-            
-            `;
+            Provide the complete code for the unit tests.`;
         } else if (language.toLowerCase() === 'java') {
             prompt = `
             You are an expert in writing unit tests for Java code. Your task is to generate a comprehensive set of unit tests for the following method using JUnit 5. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -48,16 +38,8 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Use JUnit 5 for writing the tests.
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Ensure the tests are well-structured and include assertions to verify the expected outcomes.
-            - Provide the complete code for the unit tests, including necessary imports.
-            Provide the response in JSON format with the following structure:
-            {
-                "message": "Unit tests for Java code",
-                "language": "java",
-                "code": "<unit test code>"
-            }
-            make sure the code block is JSON parsable
-            `
-            ;
+            - Provide the complete code for the unit tests, including necessary imports.`
+                ;
         } else if (language.toLowerCase() === 'c++') {
             prompt = `
             You are an expert in writing unit tests for C++ code. Your task is to generate a comprehensive set of unit tests for the following function. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -71,16 +53,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Include tests for invalid inputs to ensure the function handles errors properly.
     
-            Provide the complete code for the unit tests.
-            Provide the response in JSON format with the following structure:
-            {
-                "message": "Unit tests for C++ code",
-                "language": "c++",
-                "code": "<unit test code>"
-            }
-                make sure the code block is JSON parsable
-
-            `;
+            Provide the complete code for the unit tests `;
         } else if (language.toLowerCase() === 'c') {
             prompt = `
             You are an expert in writing unit tests for C code. Your task is to generate a comprehensive set of unit tests for the following function. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -94,16 +67,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Include tests for invalid inputs to ensure the function handles errors properly.
     
-            Provide the complete code for the unit tests.
-
-            Provide the response in JSON format with the following structure:
-            {
-                "message": "Unit tests for C code",
-                "language": "c",
-                "code": "<unit test code>"
-            }
-                make sure the code block is JSON parsable
-            `;
+            Provide the complete code for the unit tests.`;
         } else if (language.toLowerCase() === 'javascript') {
             prompt = `
             You are an expert in writing unit tests for JavaScript code. Your task is to generate a comprehensive set of unit tests for the following function using Jest. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -117,14 +81,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Include tests for incorrect input types to ensure the function handles errors properly.
             
-            Provide the complete code for the unit tests.
-             {
-                "message": "Unit tests for code",
-                "language": "JavaScript",
-                "code": "<unit test code>"
-            }
-                make sure the code block is JSON parsable
-            `;
+            Provide the complete code for the unit tests.`;
         } else if (language.toLowerCase() === 'go') {
             prompt = `
             You are an expert in writing unit tests for Go code. Your task is to generate a comprehensive set of unit tests for the following function. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -138,16 +95,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Include tests for invalid inputs to ensure the function handles errors properly.
     
-            Provide the complete code for the unit tests.
-
-            Provide the response in JSON format with the following structure:
-            {
-                "message": "Unit tests for Go code",
-                "language": "go",
-                "code": "<unit test code>"
-            }
-                make sure the code block is JSON parsable
-            `;
+            Provide the complete code for the unit tests.`;
         } else {
             prompt = `
             You are an expert in writing unit tests. Your task is to generate a comprehensive set of unit tests for the following code snippet. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -158,15 +106,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
 
             Requirements:
             - Ensure the tests are well-structured and include assertions to verify the expected outcomes.
-            - Provide the complete code for the unit tests.
-
-            Provide the response in JSON format with the following structure:
-            {
-                "message": "Unit tests for code",
-                "language": "${language}",
-                "code": "<unit test code>"
-            }
-                make sure the code block is JSON parsable
+            - Provide the complete code for the unit tests.    make sure the code block is JSON parsable
             `;
         }
 

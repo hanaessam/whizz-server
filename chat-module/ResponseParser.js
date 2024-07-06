@@ -1,3 +1,5 @@
+// import { extractCodeInLanguage } from "../parsers/switchCodeParser";
+const extractCodeInLanguage = require('../parsers/switchCodeParser');
 class ResponseParser {
   constructor(response) {
     this.response = response;
@@ -41,21 +43,21 @@ class ResponseParser {
 
   parseUnitTests() {
     try {
-      const unitTests = JSON.parse(this.response);
+      const unitTests = extractCodeInLanguage(this.response);
       return unitTests;
     } catch (error) {
       console.error('Error parsing response:', error);
-      return {message: 'Error parsing response'};
+      return { message: 'Error parsing response' };
     }
   }
-  
+
   parseSwitchCodeLanguage() {
     try {
-      const switchCodeLanguage = JSON.parse(this.response);
+      const switchCodeLanguage = extractCodeInLanguage(this.response);
       return switchCodeLanguage;
     } catch (error) {
       console.error('Error parsing response:', error);
-      return {message: 'Error parsing response'};
+      return { message: 'Error parsing response' };
     }
   }
 
