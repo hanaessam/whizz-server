@@ -1,8 +1,9 @@
 const summarizeContent = require('./summarize');
 
 async function handleSummaryRequest(req, res) {
-    const filesData = req.body;
-    const userId = req.body;
+    const {filesData, userId} = req.body;
+    console.log('User ID:', userId);
+    console.log('Files data:', filesData);
     if (!Array.isArray(filesData)) {
         return res.status(400).send('Invalid data format');
     }
@@ -12,7 +13,7 @@ async function handleSummaryRequest(req, res) {
         const summaries = await Promise.all(filesData.map(async (file) => ({
             name: file.name,
             path: file.path,
-            content: await summarizeContent(file.content)
+            content: await summarizeContent(file.content , userId)
         })));
 
         res.status(200).json(summaries);
