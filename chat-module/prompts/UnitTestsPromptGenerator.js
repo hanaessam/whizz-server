@@ -25,7 +25,19 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Include tests for incorrect input types to ensure the function handles errors properly.
 
-            Provide the complete code for the unit tests.`;
+            Provide the complete code for the unit tests.
+
+         
+              i want the response to be a json parsable object that contains the following:
+            {
+                "message": "message about gnerating the unit test",
+                "language": "language of the code",
+                "code": "code block for generated unit test fucntion"
+            }
+            for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
+
+            
+            `;
         } else if (language.toLowerCase() === 'java') {
             prompt = `
             You are an expert in writing unit tests for Java code. Your task is to generate a comprehensive set of unit tests for the following method using JUnit 5. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -38,7 +50,18 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Use JUnit 5 for writing the tests.
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Ensure the tests are well-structured and include assertions to verify the expected outcomes.
-            - Provide the complete code for the unit tests, including necessary imports.`
+            - Provide the complete code for the unit tests, including necessary imports.
+            
+            i want the response to be a json parsable object that contains the following:
+              i want the response to be a json parsable object that contains the following:
+            {
+                "message": "message about gnerating the unit test",
+                "language": "language of the code",
+                "code": "code block for generated unit test fucntion"
+            }
+                 for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
+            
+            `
                 ;
         } else if (language.toLowerCase() === 'c++') {
             prompt = `
@@ -53,7 +76,17 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Include tests for invalid inputs to ensure the function handles errors properly.
     
-            Provide the complete code for the unit tests `;
+            Provide the complete code for the unit tests 
+            
+            i want the response to be a json parsable object that contains the following:
+              i want the response to be a json parsable object that contains the following:
+            {
+                "message": "message about gnerating the unit test",
+                "language": "language of the code",
+                "code": "code block for generated unit test fucntion"
+            }
+             for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
+            `;
         } else if (language.toLowerCase() === 'c') {
             prompt = `
             You are an expert in writing unit tests for C code. Your task is to generate a comprehensive set of unit tests for the following function. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -67,7 +100,16 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Include tests for invalid inputs to ensure the function handles errors properly.
     
-            Provide the complete code for the unit tests.`;
+            Provide the complete code for the unit tests.
+            
+              i want the response to be a json parsable object that contains the following:
+            {
+                "message": "message about gnerating the unit test",
+                "language": "language of the code",
+                "code": "code block for generated unit test fucntion"
+            }
+            
+            `;
         } else if (language.toLowerCase() === 'javascript') {
             prompt = `
             You are an expert in writing unit tests for JavaScript code. Your task is to generate a comprehensive set of unit tests for the following function using Jest. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -81,7 +123,16 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Include tests for incorrect input types to ensure the function handles errors properly.
             
-            Provide the complete code for the unit tests.`;
+            Provide the complete code for the unit tests.
+              i want the response to be a json parsable object that contains the following:
+            {
+                "message": "message about gnerating the unit test",
+                "language": "language of the code",
+                "code": "code block for generated unit test fucntion"
+            }
+                 for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
+            
+            `;
         } else if (language.toLowerCase() === 'go') {
             prompt = `
             You are an expert in writing unit tests for Go code. Your task is to generate a comprehensive set of unit tests for the following function. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -95,7 +146,16 @@ class UnitTestsPromptGenerator extends PromptGenerator {
             - Include tests for positive numbers, negative numbers, zero, and large numbers.
             - Include tests for invalid inputs to ensure the function handles errors properly.
     
-            Provide the complete code for the unit tests.`;
+            Provide the complete code for the unit tests.
+            
+             i want the response to be a json parsable object that contains the following:
+            {
+                "message": "message about gnerating the unit test",
+                "language": "language of the code",
+                "code": "code block for generated unit test fucntion"
+            }
+                 for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
+            `;
         } else {
             prompt = `
             You are an expert in writing unit tests. Your task is to generate a comprehensive set of unit tests for the following code snippet. Ensure that the tests cover various cases, including normal cases, edge cases, and error handling.
@@ -106,7 +166,16 @@ class UnitTestsPromptGenerator extends PromptGenerator {
 
             Requirements:
             - Ensure the tests are well-structured and include assertions to verify the expected outcomes.
-            - Provide the complete code for the unit tests.    make sure the code block is JSON parsable
+            - Provide the complete code for the unit tests.    
+            make sure the code block is JSON parsable
+            
+            i want the response to be a json parsable object that contains the following:
+            {
+                "message": "message about gnerating the unit test",
+                "language": "language of the code",
+                "code": "code block for generated unit test fucntion"
+            }
+             for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
             `;
         }
 
