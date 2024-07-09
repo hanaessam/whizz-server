@@ -34,7 +34,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
                 "language": "language of the code",
                 "code": "code block for generated unit test fucntion"
             }
-            for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
+            for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline and make the code all in one line in the response.
 
             
             `;
@@ -59,7 +59,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
                 "language": "language of the code",
                 "code": "code block for generated unit test fucntion"
             }
-                 for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
+              make the code all in one line in the response.
             
             `
                 ;
@@ -85,7 +85,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
                 "language": "language of the code",
                 "code": "code block for generated unit test fucntion"
             }
-             for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
+               make the code all in one line in the response.
             `;
         } else if (language.toLowerCase() === 'c') {
             prompt = `
@@ -108,7 +108,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
                 "language": "language of the code",
                 "code": "code block for generated unit test fucntion"
             }
-            
+             make the code all in one line in the response.
             `;
         } else if (language.toLowerCase() === 'javascript') {
             prompt = `
@@ -130,8 +130,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
                 "language": "language of the code",
                 "code": "code block for generated unit test fucntion"
             }
-                 for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
-            
+              make the code all in one line in the response.
             `;
         } else if (language.toLowerCase() === 'go') {
             prompt = `
@@ -154,7 +153,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
                 "language": "language of the code",
                 "code": "code block for generated unit test fucntion"
             }
-                 for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
+              make the code all in one line in the response.
             `;
         } else {
             prompt = `
@@ -175,7 +174,7 @@ class UnitTestsPromptGenerator extends PromptGenerator {
                 "language": "language of the code",
                 "code": "code block for generated unit test fucntion"
             }
-             for the code To include multi-line strings or special characters in JSON, you need to escape these appropriately. For multi-line strings, you can use \n to represent a newline.
+               make the code all in one line in the response.
             `;
         }
 
